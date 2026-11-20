@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#070b14">
+<title>Ads Libri</title>
+<style>
+html,body{margin:0;background:#070b14;color:#e8f1ff;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+body{padding:12px}
+#gate{max-width:360px;margin:18vh auto 0;padding:24px;border:1px solid #1b2a45;border-radius:16px;background:#0d1424;text-align:center}
+#gate h1{margin:0 0 6px;font-size:22px}
+#gate p{color:#7f93b5;font-size:14px;margin:0 0 16px}
+#gate input{width:100%;box-sizing:border-box;padding:12px;border-radius:10px;border:1px solid #1b2a45;background:#070b14;color:#e8f1ff;font-size:16px}
+#gate button{margin-top:12px;width:100%;padding:12px;border-radius:10px;border:0;background:#22e4ff;color:#04101c;font-weight:700;font-size:16px}
+#err{color:#ff4d6d;font-size:13px;min-height:18px;margin-top:10px}
+
+.ads{--bg:#070b14;--bg2:#0d1424;--line:#1b2a45;--fg:#e8f1ff;--mut:#7f93b5;--cy:#22e4ff;--mg:#ff3d9a;--gr:#38f9a6;--am:#ffb800;--rd:#ff4d6d;
+ display:flex;flex-direction:column;gap:18px;max-width:1020px;margin:0 auto;padding:20px;border-radius:18px;color:var(--fg);
+ background:radial-gradient(900px 400px at 85% -10%,rgba(34,228,255,.12),transparent 60%),radial-gradient(700px 400px at -10% 10%,rgba(255,61,154,.10),transparent 60%),var(--bg);
+ font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.ads *{box-sizing:border-box;min-width:0}
+.ads button{font:inherit;color:inherit;cursor:pointer}
+.ads-kick{font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--cy);display:flex;align-items:center;gap:8px}
+.ads-kick::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--gr);box-shadow:0 0 10px var(--gr)}
+.ads-title{font-weight:700;font-size:34px;letter-spacing:-.02em;margin:6px 0 0;background:linear-gradient(90deg,#fff,var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ads-take{margin:8px 0 0;color:var(--mut);font-size:15px;line-height:1.5}
+.ads-take b{color:var(--fg)}
+.ads-demo{border:1px dashed var(--am);border-radius:12px;padding:10px 14px;font-size:12.5px;color:var(--am);background:rgba(255,184,0,.06)}
+.ads-sec{font:600 11px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--mut);margin:0 0 12px}
+.ads-card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));border:1px solid var(--line);border-radius:16px;padding:16px}
+.ads-per{display:grid;grid-template-columns:minmax(250px,300px) 1fr;gap:16px;align-items:start}
+@media (max-width:700px){.ads-per{grid-template-columns:1fr}}
+.ads-plabel{font:600 14px ui-monospace,Menlo,Consolas,monospace;color:var(--cy);margin-bottom:10px}
+.ads-quick{display:flex;flex-wrap:wrap;gap:6px}
+.ads-quick button{background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:6px 12px;font-size:12.5px}
+.ads-quick button:hover{border-color:var(--cy)}
+.ads-calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-weight:600;font-size:14px;text-transform:capitalize}
+.ads-calh button{background:var(--bg2);border:1px solid var(--line);border-radius:8px;width:30px;height:28px}
+.ads-calh button:disabled{opacity:.3;cursor:default}
+.ads-cal{display:grid;grid-template-columns:34px repeat(7,1fr);gap:3px;font-size:12.5px}
+.ads-cal .h{color:var(--mut);text-align:center;font-size:11px;padding:2px 0}
+.ads-cal button{background:transparent;border:1px solid transparent;border-radius:8px;padding:6px 0;font-variant-numeric:tabular-nums}
+.ads-cal button:disabled{color:#3a4a68;cursor:default}
+.ads-cal button.wk{color:var(--mut);font-size:11px;border-color:var(--line)}
+.ads-cal button.wk:hover:not(:disabled){border-color:var(--cy);color:var(--cy)}
+.ads-cal button.d:hover:not(:disabled){border-color:var(--cy)}
+.ads-cal button[data-sel="in"]{background:rgba(34,228,255,.16)}
+.ads-cal button[data-sel="edge"]{background:var(--cy);color:#04101c;font-weight:700}
+.ads-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.ads-kpis .ads-card:nth-child(1){border-top:2px solid var(--mg)}
+.ads-kpis .ads-card:nth-child(2){border-top:2px solid var(--cy)}
+.ads-kpis .ads-card:nth-child(3){border-top:2px solid var(--gr)}
+.ads-kpis .ads-card:nth-child(4){border-top:2px solid var(--am)}
+.ads-lab{font-size:12px;color:var(--mut)}
+.ads-num{font:600 26px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums;display:block;margin:6px 0 2px}
+.ads-var{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--mut)}
+.ads-var[data-tone="good"]{color:var(--gr)}
+.ads-var[data-tone="bad"]{color:var(--rd)}
+.ads-alerts{display:flex;flex-direction:column;gap:10px}
+.ads-al{border:1px solid var(--rd);border-radius:12px;padding:12px 14px;background:rgba(255,77,109,.09);box-shadow:0 0 18px rgba(255,77,109,.18)}
+.ads-al b{display:block;font-size:14px}
+.ads-al small{display:block;color:var(--mut);font-size:12.5px;margin-top:3px;line-height:1.45}
+.ads-al .ok{font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--gr);margin-top:6px}
+.ads-calm{color:var(--gr);font-size:14px}
+.ads-chart{position:relative;min-height:220px}
+.ads-chart svg{display:block;width:100%}
+.ads-tip{position:absolute;pointer-events:none;background:#0d1424;border:1px solid var(--cy);color:var(--fg);border-radius:8px;padding:6px 10px;font:12px ui-monospace,Menlo,Consolas,monospace;white-space:nowrap;box-shadow:0 0 14px rgba(34,228,255,.3)}
+.ads-leg{display:flex;gap:16px;font-size:12px;color:var(--mut);margin-bottom:6px}
+.ads-leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px}
+.ads-wrap{overflow-x:auto}
+.ads table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.ads th{text-align:left;font:600 10.5px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:8px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+.ads td{padding:8px;border-bottom:1px solid rgba(27,42,69,.7);white-space:nowrap}
+.ads th.n,.ads td.n{text-align:right}
+.ads td.w{white-space:normal;min-width:170px}
+.ads tr.book td{background:rgba(34,228,255,.07);font-weight:700;border-top:1px solid var(--line)}
+.ads tr.sub td:first-child{padding-left:22px;color:var(--mut)}
+.ads tr.pick{cursor:pointer}
+.ads tr.pick:hover td{background:rgba(34,228,255,.06)}
+.ads td.low{color:var(--am)}
+.ads td.bad{color:var(--rd)}
+.ads td.good{color:var(--gr)}
+.ads-pill{border-radius:99px;padding:2px 9px;font-size:11.5px;border:1px solid var(--line);color:var(--mut)}
+.ads-pill[data-tone="good"]{color:var(--gr);border-color:var(--gr)}
+.ads-pill[data-tone="warn"]{color:var(--am);border-color:var(--am)}
+.ads-pill[data-tone="bad"]{color:var(--rd);border-color:var(--rd)}
+.ads-log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.ads-log li{display:flex;flex-wrap:wrap;gap:4px 12px;justify-content:space-between;border-bottom:1px solid rgba(27,42,69,.7);padding-bottom:10px;font-size:13.5px}
+.ads-log small{color:var(--mut);font-size:12px;display:block}
+.ads-tips{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.ads-tips li{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.02)}
+.ads-tips b{display:block;margin-bottom:6px;font-size:13.5px}
+.ads-tips p{margin:4px 0 0;font-size:12.5px;color:var(--mut);line-height:1.45}
+.ads-tips p::before{content:"→ ";color:var(--cy)}
+.ads-note{font-size:12px;color:var(--mut);margin:12px 0 0;line-height:1.5}
+.ads-empty{color:var(--mut);font-size:13.5px}
+</style></head><body>
+<div id="gate" hidden><h1>Ads Libri</h1><p>Inserisci la password</p>
+<form id="f"><input id="pw" type="password" autocomplete="current-password" placeholder="Password"><button type="submit">Entra</button></form><div id="err"></div></div>
+<div id="app" hidden><div class="ads">
+  <div>
+    <div class="ads-kick">Bot Ads · solo lettura</div>
+    <h1 class="ads-title">Ads Libri</h1>
+    <p class="ads-take" data-draw="takeaway">—</p>
+  </div>
+  <div class="ads-demo" id="agg">Caricamento…</div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Periodo</h2>
+    <div class="ads-per">
+      <div>
+        <div class="ads-plabel" data-draw="periodo">—</div>
+        <div class="ads-quick" id="quick">
+          <button type="button" data-q="oggi">Oggi</button>
+          <button type="button" data-q="ieri">Ieri</button>
+          <button type="button" data-q="7g">Ultimi 7 giorni</button>
+          <button type="button" data-q="sett-scorsa">Settimana scorsa</button>
+          <button type="button" data-q="mese">Questo mese</button>
+          <button type="button" data-q="tutto">Dall'inizio</button>
+        </div>
+      </div>
+      <div>
+        <div class="ads-calh"><button type="button" id="calprev" aria-label="Mese precedente">‹</button><span data-draw="calmese">—</span><button type="button" id="calnext" aria-label="Mese successivo">›</button></div>
+        <div class="ads-cal" data-draw="calendario"></div>
+        <p class="ads-note">Tocca un giorno per vederlo da solo, poi un secondo giorno per scegliere un periodo. Tocca il numero della settimana per scegliere tutta la settimana.</p>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h2 class="ads-sec" data-draw="avvisititolo">Avvisi budget</h2>
+    <div class="ads-alerts" data-draw="avvisi" data-source="righe"></div>
+  </div>
+
+  <div class="ads-kpis">
+    <div class="ads-card"><span class="ads-lab">Spesa Ads</span><b class="ads-num" data-draw="kpi" data-key="spesa">—</b><span class="ads-var" data-draw="delta" data-key="spesa" data-good="down"></span></div>
+    <div class="ads-card"><span class="ads-lab">Vendite da Ads</span><b class="ads-num" data-draw="kpi" data-key="vendite">—</b><span class="ads-var" data-draw="delta" data-key="vendite" data-good="up"></span></div>
+    <div class="ads-card"><span class="ads-lab">Ordini</span><b class="ads-num" data-draw="kpi" data-key="ordini">—</b><span class="ads-var" data-draw="delta" data-key="ordini" data-good="up"></span></div>
+    <div class="ads-card"><span class="ads-lab">ACOS (spesa su vendite)</span><b class="ads-num" data-draw="kpi" data-key="acos">—</b><span class="ads-var" data-draw="delta" data-key="acos" data-good="down"></span></div>
+    <div class="ads-card"><span class="ads-lab">CTR (click su impression)</span><b class="ads-num" data-draw="kpi" data-key="ctr">—</b><span class="ads-var" data-draw="delta" data-key="ctr" data-good="up"></span></div>
+    <div class="ads-card"><span class="ads-lab">CPC (costo per click)</span><b class="ads-num" data-draw="kpi" data-key="cpc">—</b><span class="ads-var" data-draw="delta" data-key="cpc" data-good="down"></span></div>
+    <div class="ads-card"><span class="ads-lab">Impression al giorno per campagna</span><b class="ads-num" data-draw="kpi" data-key="impg">—</b><span class="ads-var">obiettivo: 2.000</span></div>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Spesa e vendite al giorno (tocca un giorno)</h2>
+    <div class="ads-leg"><span><i style="background:#ff3d9a"></i>Spesa</span><span><i style="background:#22e4ff"></i>Vendite da Ads</span></div>
+    <div class="ads-chart" data-draw="chart" data-source="righe">—</div>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Campagne per libro</h2>
+    <div class="ads-wrap">
+      <table>
+        <thead><tr><th>Libro / campagna</th><th class="n">Impression al giorno</th><th class="n">Click</th><th class="n">CTR</th><th class="n">CPC</th><th class="n">Spesa</th><th class="n">Ordini</th><th class="n">Vendite</th><th class="n">ACOS</th><th>Budget finito</th></tr></thead>
+        <tbody data-draw="libri" data-source="righe"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Giorno per giorno (tocca una riga)</h2>
+    <div class="ads-wrap">
+      <table>
+        <thead><tr><th>Giorno</th><th class="n">Spesa</th><th class="n">Vendite</th><th class="n">Ordini</th><th class="n">ACOS</th><th class="n">Click</th><th class="n">Impression</th><th>Budget finiti</th></tr></thead>
+        <tbody data-draw="giorni" data-source="righe"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Target che spendono troppo e convertono poco</h2>
+    <div class="ads-wrap">
+      <table>
+        <thead><tr><th>Libro</th><th>Campagna</th><th>Target</th><th class="n">Offerta</th><th class="n">Click</th><th class="n">Spesa</th><th class="n">Ordini</th><th class="n">ACOS</th><th>Il bot farebbe</th></tr></thead>
+        <tbody data-draw="target" data-source="target"></tbody>
+      </table>
+    </div>
+    <p class="ads-note">Conteggio dall'inizio delle campagne (5 novembre), non dal periodo scelto sopra.</p>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec" data-draw="regtitolo">Regole del bot</h2>
+    <div class="ads-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Stato</th><th>Su cosa</th><th>Quando</th><th>Il bot fa</th></tr></thead>
+        <tbody data-draw="tabregole" data-source="regole"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Cosa ha fatto il bot nel periodo</h2>
+    <ul class="ads-log" data-draw="registro" data-source="azioni"></ul>
+  </div>
+
+  <div class="ads-card">
+    <h2 class="ads-sec">Dove intervenire per migliorare</h2>
+    <ul class="ads-tips" data-draw="consigli" data-source="righe"></ul>
+    <p class="ads-note">Soglie usate: CTR sotto 0,30%, CPC sopra 0,60 $, ACOS sopra 40%, impression sotto 2.000 al giorno per campagna. Il rango organico non si legge dalle API di Amazon Ads: lo si segue con il report vendite del KDP.</p>
+  </div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+window.__D={}; window.__draws={};
+window.dash={
+  data:function(id){ var v=window.__D[id]; return v===undefined?{status:'loading'}:{status:'ok',data:v}; },
+  draw:function(n,fn){ if(fn){window.__draws[n]=fn;} var f=window.__draws[n]; if(!f||!window.__D.righe) return;
+    document.querySelectorAll('[data-draw="'+n+'"]').forEach(function(e){ try{f(e);}catch(err){console.log('ERR '+n+': '+err.message);} }); }
+};
+</script>
+<script>
+(function(){
+  var SOGLIA_IMP = 2000, SOGLIA_CTR = 0.003, SOGLIA_CPC = 0.60, SOGLIA_ACOS = 0.40;
+  var parse = d3.utcParse('%Y-%m-%d'), iso = d3.utcFormat('%Y-%m-%d');
+  var fmtLong = d3.utcFormat('%d/%m/%Y'), fmtDay = d3.utcFormat('%d/%m');
+  var fmtMese = d3.utcFormat('%B %Y');
+  var eur = d3.format('$,.2f'), pct = d3.format('.1%'), pct2 = d3.format('.2%'), int = d3.format(',d');
+  var DAY = 86400000;
+  var state = {from:null, to:null, anchor:null, view:null};
+
+  function num(x){ return Number(x) || 0; }
+  function righe(){ var g = dash.data('righe'); return g.status === 'ok' ? g.data : null; }
+  function addDays(s, n){ return iso(new Date(parse(s).getTime() + n*DAY)); }
+  function diffDays(a, b){ return Math.round((parse(b) - parse(a)) / DAY); }
+  function limiti(r){
+    var d = r.map(function(x){return x.data;}).sort();
+    return {min:d[0], max:d[d.length-1]};
+  }
+  function ensure(){
+    var r = righe(); if (!r || !r.length) return null;
+    var L = limiti(r);
+    if (!state.to){ state.to = L.max; state.from = addDays(L.max, -6) < L.min ? L.min : addDays(L.max, -6); }
+    if (!state.view){ state.view = state.to.slice(0,7) + '-01'; }
+    return L;
+  }
+  function inRange(x){ return x.data >= state.from && x.data <= state.to; }
+  function totals(rows){
+    var s = function(k){ return rows.reduce(function(a,x){return a + num(x[k]);},0); };
+    var spesa = s('spesa'), vendite = s('vendite'), click = s('click'), imp = s('impression');
+    return {spesa:spesa, vendite:vendite, ordini:s('ordini'), click:click, impression:imp,
+      acos: vendite ? spesa/vendite : null, ctr: imp ? click/imp : null, cpc: click ? spesa/click : null};
+  }
+  function giorniCamp(rows){ // giorni attivi per campagna, media impression al giorno per campagna
+    var set = {}; rows.forEach(function(x){ set[x.campagna] = (set[x.campagna]||0) + 1; });
+    return set;
+  }
+  function prevRows(r, L){
+    var len = diffDays(state.from, state.to) + 1;
+    var pf = addDays(state.from, -len), pt = addDays(state.from, -1);
+    if (pf < L.min) return null;
+    return r.filter(function(x){ return x.data >= pf && x.data <= pt; });
+  }
+  function redraw(){
+    ['periodo','calmese','calendario','takeaway','avvisititolo','avvisi','kpi','delta','chart','libri','giorni','target','registro','consigli'].forEach(function(n){ dash.draw(n); });
+  }
+  function setRange(a, b){ if (a > b){ var t = a; a = b; b = t; } state.from = a; state.to = b; state.anchor = null; state.view = a.slice(0,7) + '-01'; redraw(); }
+  function pickDay(d){
+    if (state.anchor){ var a = state.anchor; setRange(a, d); }
+    else { state.from = d; state.to = d; state.anchor = d; redraw(); }
+  }
+
+  // ---------- periodo e calendario
+  dash.draw('periodo', function(el){
+    if (!ensure()){ el.textContent = '—'; return; }
+    var n = diffDays(state.from, state.to) + 1;
+    el.textContent = n === 1 ? 'Giorno ' + fmtLong(parse(state.to)) : 'Dal ' + fmtLong(parse(state.from)) + ' al ' + fmtLong(parse(state.to)) + ' · ' + n + ' giorni';
+  });
+  dash.draw('calmese', function(el){
+    if (!ensure()){ el.textContent = '—'; return; }
+    el.textContent = fmtMese(parse(state.view));
+  });
+  dash.draw('calendario', function(el){
+    var L = ensure(); if (!L){ el.replaceChildren(); return; }
+    var first = parse(state.view);
+    var y = first.getUTCFullYear(), m = first.getUTCMonth();
+    var nextM = new Date(Date.UTC(y, m + 1, 1));
+    var nDays = Math.round((nextM - first) / DAY);
+    var offset = (first.getUTCDay() + 6) % 7; // lunedi = 0
+    var cells = [];
+    ['Sett.','Lun','Mar','Mer','Gio','Ven','Sab','Dom'].forEach(function(t){ var h = document.createElement('div'); h.className = 'h'; h.textContent = t; cells.push(h); });
+    var total = Math.ceil((offset + nDays) / 7) * 7;
+    for (var i = 0; i < total; i++){
+      if (i % 7 === 0){
+        var rowStart = i - offset + 1; // giorno del mese del lunedi
+        var mon = new Date(Date.UTC(y, m, rowStart));
+        var monIso = iso(mon), sunIso = iso(new Date(mon.getTime() + 6*DAY));
+        var a = monIso < L.min ? L.min : monIso, b = sunIso > L.max ? L.max : sunIso;
+        var wb = document.createElement('button'); wb.type = 'button'; wb.className = 'wk';
+        wb.textContent = d3.utcFormat('%V')(mon);
+        wb.setAttribute('aria-label', 'Settimana ' + wb.textContent);
+        wb.disabled = a > b;
+        (function(a, b){ wb.onclick = function(){ setRange(a, b); }; })(a, b);
+        cells.push(wb);
+      }
+      var dn = i - offset + 1;
+      var btn = document.createElement('button'); btn.type = 'button'; btn.className = 'd';
+      if (dn < 1 || dn > nDays){ btn.disabled = true; btn.textContent = ''; btn.style.visibility = 'hidden'; }
+      else {
+        var ds = iso(new Date(Date.UTC(y, m, dn)));
+        btn.textContent = String(dn);
+        btn.disabled = ds < L.min || ds > L.max;
+        if (ds >= state.from && ds <= state.to) btn.setAttribute('data-sel', (ds === state.from || ds === state.to) ? 'edge' : 'in');
+        (function(ds){ btn.onclick = function(){ pickDay(ds); }; })(ds);
+      }
+      cells.push(btn);
+    }
+    el.replaceChildren.apply(el, cells);
+  });
+
+  // ---------- takeaway
+  dash.draw('takeaway', function(el){
+    var L = ensure(); if (!L){ el.textContent = '—'; return; }
+    var t = totals(righe().filter(inRange));
+    var n = diffDays(state.from, state.to) + 1;
+    var quando = n === 1 ? 'il ' + fmtLong(parse(state.to)) : 'dal ' + fmtLong(parse(state.from)) + ' al ' + fmtLong(parse(state.to));
+    function b(txt){ var e = document.createElement('b'); e.textContent = txt; return e; }
+    el.replaceChildren(document.createTextNode('Hai speso '), b(eur(t.spesa)), document.createTextNode(' ' + quando + ' e le pubblicità hanno portato '), b(eur(t.vendite)),
+      document.createTextNode(' di vendite' + (t.acos == null ? '.' : ', con un ACOS del ')), t.acos == null ? document.createTextNode('') : b(pct(t.acos)), document.createTextNode(t.acos == null ? '' : '.'));
+  });
+
+  // ---------- KPI
+  dash.draw('kpi', function(el){
+    if (!ensure()){ el.textContent = '—'; return; }
+    var rows = righe().filter(inRange), t = totals(rows), k = el.getAttribute('data-key');
+    var v;
+    if (k === 'impg'){ var gc = giorniCamp(rows), cn = Object.keys(gc).length, gd = rows.length; v = cn && gd ? int(Math.round(t.impression / gd)) : '—'; }
+    else if (t[k] == null) v = '—';
+    else v = k === 'acos' ? pct(t[k]) : k === 'ordini' ? int(t[k]) : k === 'ctr' ? pct2(t[k]) : eur(t[k]);
+    el.textContent = v;
+  });
+  dash.draw('delta', function(el){
+    var L = ensure(); if (!L){ el.textContent = ''; return; }
+    var t = totals(righe().filter(inRange)), pr = prevRows(righe(), L), k = el.getAttribute('data-key');
+    if (!pr){ el.textContent = 'nessun periodo precedente'; el.removeAttribute('data-tone'); return; }
+    var p = totals(pr);
+    if (!p[k] || t[k] == null){ el.textContent = '—'; el.removeAttribute('data-tone'); return; }
+    var v = t[k] / p[k] - 1, good = el.getAttribute('data-good');
+    el.textContent = (v >= 0 ? '+' : '−') + d3.format('.1%')(Math.abs(v)) + ' sul periodo prima';
+    var tone = Math.abs(v) < 0.005 ? '' : ((v > 0) === (good === 'up') ? 'good' : 'bad');
+    if (tone) el.setAttribute('data-tone', tone); else el.removeAttribute('data-tone');
+  });
+
+  // ---------- avvisi budget
+  function oraMin(s){ var p = s.split(':'); return num(p[0])*60 + num(p[1]); }
+  function hm(min){ return Math.floor(min/60) + ' h ' + (min % 60) + ' min'; }
+  dash.draw('avvisititolo', function(el){
+    if (!ensure()){ el.textContent = 'Avvisi budget'; return; }
+    el.textContent = 'Avvisi budget del ' + fmtLong(parse(state.to));
+  });
+  dash.draw('avvisi', function(el){
+    if (!ensure()){ el.replaceChildren(); return; }
+    var rows = righe(), day = rows.filter(function(x){ return x.data === state.to && x.ora_esaurimento; });
+    if (!day.length){
+      var p = document.createElement('div'); p.className = 'ads-calm'; p.textContent = 'Nessuna campagna ha finito il budget in questo giorno.';
+      el.replaceChildren(p); return;
+    }
+    el.replaceChildren.apply(el, day.map(function(r){
+      var rng = totals(rows.filter(function(x){ return inRange(x) && x.campagna === r.campagna; }));
+      var d = document.createElement('div'); d.className = 'ads-al';
+      var t = document.createElement('b'); t.textContent = r.libro + ' · ' + r.tipo + ': budget finito alle ' + r.ora_esaurimento;
+      var s = document.createElement('small');
+      var mm = oraMin(r.ora_esaurimento);
+      s.textContent = 'Ha speso ' + eur(num(r.budget)) + ' in ' + hm(mm) + ' dalla mezzanotte. In questo giorno: ' + int(num(r.ordini)) + ' ordini, vendite ' + eur(num(r.vendite)) +
+        (rng.acos == null ? '.' : ', ACOS del periodo ' + pct(rng.acos) + (rng.acos > SOGLIA_ACOS ? ': conviene intervenire sui target che spendono di più, non sul budget.' : ': la campagna rende, il budget la frena.'));
+      var o = document.createElement('div'); o.className = 'ok';
+      o.textContent = 'Budget ' + int(num(r.budget)) + ' → ' + int(num(r.budget_alzato)) + ' · proposto';
+      d.appendChild(t); d.appendChild(s); d.appendChild(o); return d;
+    }));
+  });
+
+  // ---------- grafico
+  dash.draw('chart', function(el){
+    var L = ensure(); if (!L){ el.textContent = '—'; return; }
+    var all = righe();
+    var by = d3.rollups(all, function(v){ return {spesa:d3.sum(v, function(x){return num(x.spesa);}), vendite:d3.sum(v, function(x){return num(x.vendite);}), ordini:d3.sum(v, function(x){return num(x.ordini);})}; }, function(x){ return x.data; })
+      .map(function(e){ return {data:e[0], spesa:e[1].spesa, vendite:e[1].vendite, ordini:e[1].ordini}; }).sort(function(a,b){ return a.data < b.data ? -1 : 1; });
+    var W = Math.max(el.clientWidth, 260), H = 220, m = {t:10, r:10, b:24, l:46};
+    var maxY = d3.max(by, function(r){ return Math.max(r.spesa, r.vendite); }) * 1.1;
+    var x = d3.scaleBand().domain(by.map(function(r){ return r.data; })).range([m.l, W - m.r]).padding(0.25);
+    var y = d3.scaleLinear().domain([0, maxY]).nice().range([H - m.b, m.t]);
+    var svg = d3.create('svg').attr('viewBox','0 0 ' + W + ' ' + H).attr('width','100%').attr('role','img').attr('aria-label','Spesa e vendite da pubblicità per giorno');
+    svg.append('g').selectAll('line').data(y.ticks(4)).join('line').attr('x1',m.l).attr('x2',W - m.r).attr('y1',y).attr('y2',y).style('stroke','#1b2a45');
+    svg.append('g').selectAll('text').data(y.ticks(4)).join('text').attr('x',m.l - 6).attr('y',function(t){ return y(t) + 4; }).attr('text-anchor','end').style('fill','#7f93b5').style('font-size','11px').text(function(t){ return '$' + t; });
+    var step = Math.ceil(by.length / Math.max(2, Math.floor((W - m.l) / 52)));
+    svg.append('g').selectAll('text').data(by.filter(function(r,i){ return i % step === 0; })).join('text').attr('x',function(r){ return x(r.data) + x.bandwidth()/2; }).attr('y',H - 6).attr('text-anchor','middle').style('fill','#7f93b5').style('font-size','11px').text(function(r){ return fmtDay(parse(r.data)); });
+    var bw = x.bandwidth()/2;
+    function op(r){ return r.data >= state.from && r.data <= state.to ? 1 : 0.25; }
+    svg.append('g').selectAll('rect').data(by).join('rect').attr('x',function(r){ return x(r.data); }).attr('width',bw).attr('y',function(r){ return y(r.spesa); }).attr('height',function(r){ return y(0) - y(r.spesa); }).style('fill','#ff3d9a').style('opacity',op);
+    svg.append('g').selectAll('rect').data(by).join('rect').attr('x',function(r){ return x(r.data) + bw; }).attr('width',bw).attr('y',function(r){ return y(r.vendite); }).attr('height',function(r){ return y(0) - y(r.vendite); }).style('fill','#22e4ff').style('opacity',op);
+    var tip = document.createElement('div'); tip.className = 'ads-tip'; tip.hidden = true;
+    function idx(ev){ var px = d3.pointer(ev, svg.node())[0]; return Math.min(by.length - 1, Math.max(0, Math.floor((px - m.l) / ((W - m.l - m.r) / by.length)))); }
+    svg.append('rect').attr('x',m.l).attr('y',0).attr('width',W - m.l - m.r).attr('height',H - m.b).style('fill','transparent').style('cursor','pointer')
+      .on('pointermove', function(ev){ var r = by[idx(ev)]; tip.hidden = false; tip.textContent = fmtLong(parse(r.data)) + ' · spesa ' + eur(r.spesa) + ' · vendite ' + eur(r.vendite) + ' · ordini ' + r.ordini; tip.style.left = Math.min(Math.max(0, x(r.data) - 20), Math.max(0, W - tip.offsetWidth)) + 'px'; tip.style.top = '0px'; })
+      .on('pointerleave', function(){ tip.hidden = true; })
+      .on('click', function(ev){ pickDay(by[idx(ev)].data); });
+    el.replaceChildren(svg.node(), tip);
+  });
+
+  // ---------- campagne per libro
+  function cella(tr, text, cls){ var c = document.createElement('td'); if (cls) c.className = cls; c.textContent = text; tr.appendChild(c); return c; }
+  function budgetFinito(rows){
+    var f = rows.filter(function(x){ return x.ora_esaurimento; });
+    if (!f.length) return 'mai';
+    var avg = Math.round(d3.mean(f, function(x){ return oraMin(x.ora_esaurimento); }));
+    return f.length + ' su ' + rows.length + ' giorni · ore ' + String(Math.floor(avg/60)).padStart(2,'0') + ':' + String(avg % 60).padStart(2,'0') + ' in media';
+  }
+  function riga(tr, label, rows, sub){
+    var t = totals(rows), g = rows.length;
+    var impg = g ? Math.round(t.impression / g) : null;
+    cella(tr, label);
+    var ci = cella(tr, impg == null ? '—' : int(impg), 'n'); if (sub && impg != null && impg < SOGLIA_IMP) ci.className = 'n low';
+    cella(tr, int(t.click), 'n');
+    var cc = cella(tr, t.ctr == null ? '—' : pct2(t.ctr), 'n'); if (sub && t.ctr != null && t.ctr < SOGLIA_CTR) cc.className = 'n low';
+    var cp = cella(tr, t.cpc == null ? '—' : eur(t.cpc), 'n'); if (sub && t.cpc != null && t.cpc > SOGLIA_CPC) cp.className = 'n low';
+    cella(tr, eur(t.spesa), 'n'); cella(tr, int(t.ordini), 'n'); cella(tr, eur(t.vendite), 'n');
+    var ca = cella(tr, t.acos == null ? '—' : pct(t.acos), 'n');
+    if (t.acos != null) ca.className = 'n ' + (t.acos > SOGLIA_ACOS ? 'bad' : t.acos < 0.30 ? 'good' : '');
+    cella(tr, sub ? budgetFinito(rows) : '');
+  }
+  dash.draw('libri', function(tb){
+    if (!ensure()){ tb.replaceChildren(); return; }
+    var rows = righe().filter(inRange);
+    var libri = d3.groups(rows, function(x){ return x.libro; }).sort(function(a,b){ return d3.sum(b[1], function(x){ return num(x.spesa); }) - d3.sum(a[1], function(x){ return num(x.spesa); }); });
+    var out = [];
+    libri.forEach(function(l){
+      var tr = document.createElement('tr'); tr.className = 'book';
+      // per il totale del libro: impression al giorno = per campagna, quindi media dei due
+      riga(tr, l[0], l[1], false);
+      out.push(tr);
+      ['KEYWORD EXACT','PRODUCT EXACT'].forEach(function(tipo){
+        var rs = l[1].filter(function(x){ return x.tipo === tipo; });
+        var tr2 = document.createElement('tr'); tr2.className = 'sub';
+        if (!rs.length){ cella(tr2, tipo); cella(tr2, 'nessun dato', 'n'); for (var i = 0; i < 8; i++) cella(tr2, ''); }
+        else riga(tr2, tipo, rs, true);
+        out.push(tr2);
+      });
+    });
+    tb.replaceChildren.apply(tb, out);
+  });
+
+  // ---------- giorno per giorno
+  dash.draw('giorni', function(tb){
+    if (!ensure()){ tb.replaceChildren(); return; }
+    var rows = righe().filter(inRange);
+    var days = d3.groups(rows, function(x){ return x.data; }).sort(function(a,b){ return a[0] < b[0] ? 1 : -1; });
+    tb.replaceChildren.apply(tb, days.map(function(d){
+      var t = totals(d[1]), tr = document.createElement('tr'); tr.className = 'pick';
+      cella(tr, fmtLong(parse(d[0]))); cella(tr, eur(t.spesa), 'n'); cella(tr, eur(t.vendite), 'n'); cella(tr, int(t.ordini), 'n');
+      var ca = cella(tr, t.acos == null ? '—' : pct(t.acos), 'n'); if (t.acos != null && t.acos > SOGLIA_ACOS) ca.className = 'n bad';
+      cella(tr, int(t.click), 'n'); cella(tr, int(t.impression), 'n');
+      var fin = d[1].filter(function(x){ return x.ora_esaurimento; });
+      cella(tr, fin.length ? fin.map(function(x){ return x.libro + ' ' + (x.tipo === 'KEYWORD EXACT' ? 'KW' : 'PR') + ' ' + x.ora_esaurimento; }).join(', ') : '—');
+      tr.onclick = function(){ setRange(d[0], d[0]); };
+      return tr;
+    }));
+  });
+
+  // ---------- target che spendono troppo
+  function cosaFa(t){
+    var acos = t.vendite ? t.spesa / t.vendite : null;
+    if (t.ordini === 0) return t.click >= 10 ? 'Spegne e aggiunge negativa' : 'In attesa (sotto 10 click)';
+    if (acos > 0.60) return 'Spegne e aggiunge negativa';
+    if (acos > 0.40) return 'Offerta −0,02';
+    return 'Offerta invariata';
+  }
+  dash.draw('target', function(tb){
+    var g = dash.data('target');
+    if (g.status !== 'ok'){ tb.replaceChildren(); return; }
+    var rows = g.data.filter(function(t){ var a = num(t.vendite) ? num(t.spesa) / num(t.vendite) : null; return num(t.spesa) >= 2 && (num(t.ordini) === 0 || a > SOGLIA_ACOS); })
+      .sort(function(a,b){ return num(b.spesa) - num(a.spesa); }).slice(0, 8);
+    if (!rows.length){
+      var tr = document.createElement('tr'); var c = document.createElement('td'); c.colSpan = 9; c.className = 'ads-empty'; c.textContent = 'Nessun target spende molto senza convertire.'; tr.appendChild(c); tb.replaceChildren(tr); return;
+    }
+    tb.replaceChildren.apply(tb, rows.map(function(t){
+      var tr = document.createElement('tr'), a = num(t.vendite) ? num(t.spesa) / num(t.vendite) : null;
+      cella(tr, t.libro); cella(tr, t.tipo); cella(tr, t.target); cella(tr, eur(num(t.offerta)), 'n'); cella(tr, int(num(t.click)), 'n'); cella(tr, eur(num(t.spesa)), 'n'); cella(tr, int(num(t.ordini)), 'n');
+      var ca = cella(tr, a == null ? '—' : pct(a), 'n'); ca.className = 'n bad';
+      cella(tr, cosaFa({click:num(t.click), spesa:num(t.spesa), vendite:num(t.vendite), ordini:num(t.ordini)}));
+      return tr;
+    }));
+  });
+
+  // ---------- regole
+  dash.draw('regtitolo', function(el){
+    var g = dash.data('regole');
+    if (g.status !== 'ok'){ el.textContent = 'Regole del bot'; return; }
+    var a = g.data.filter(function(r){ return r.stato === 'Attiva'; }).length;
+    el.textContent = 'Regole del bot · ' + a + ' attive · ' + (g.data.length - a) + ' non attive';
+  });
+  dash.draw('tabregole', function(tb){
+    var g = dash.data('regole');
+    if (g.status !== 'ok'){ tb.replaceChildren(); return; }
+    var rows = g.data.slice().sort(function(a,b){ return (a.stato === b.stato ? 0 : a.stato === 'Attiva' ? -1 : 1) || num(a.ordine) - num(b.ordine); });
+    tb.replaceChildren.apply(tb, rows.map(function(r){
+      var tr = document.createElement('tr');
+      cella(tr, String(r.ordine));
+      var cs = cella(tr, ''); var p = document.createElement('span'); p.className = 'ads-pill'; p.textContent = r.stato; p.setAttribute('data-tone', r.stato === 'Attiva' ? 'good' : 'warn'); cs.appendChild(p);
+      cella(tr, r.ambito); cella(tr, r.quando, 'w'); cella(tr, r.allora, 'w');
+      return tr;
+    }));
+  });
+
+  // ---------- registro azioni
+  dash.draw('registro', function(ul){
+    var g = dash.data('azioni');
+    if (!ensure() || g.status !== 'ok'){ ul.replaceChildren(); return; }
+    var rows = g.data.filter(inRange).sort(function(a,b){ return a.data < b.data ? 1 : -1; });
+    if (!rows.length){ var li = document.createElement('li'); li.className = 'ads-empty'; li.textContent = 'Nessuna azione del bot nel periodo scelto.'; ul.replaceChildren(li); return; }
+    ul.replaceChildren.apply(ul, rows.map(function(r){
+      var li = document.createElement('li'), left = document.createElement('div');
+      var t = document.createElement('b'); t.textContent = r.azione + ': ' + r.libro + ' · ' + r.tipo;
+      var s = document.createElement('small'); s.textContent = fmtLong(parse(r.data)) + ' · ' + r.motivo;
+      left.appendChild(t); left.appendChild(s);
+      var right = document.createElement('div'); right.className = 'ads-var'; right.textContent = r.modifica + ' · ' + String(r.stato).toLowerCase();
+      li.appendChild(left); li.appendChild(right); return li;
+    }));
+  });
+
+  // ---------- consigli
+  dash.draw('consigli', function(ul){
+    if (!ensure()){ ul.replaceChildren(); return; }
+    var rows = righe().filter(inRange);
+    var camps = d3.groups(rows, function(x){ return x.campagna; });
+    var out = [];
+    camps.forEach(function(c){
+      var rs = c[1], t = totals(rs), first = rs[0], g = rs.length, impg = t.impression / g, tips = [];
+      if (impg < SOGLIA_IMP) tips.push('Impression ' + int(Math.round(impg)) + ' al giorno, sotto le 2.000: il traffico è poco. Controlla che le offerte siano competitive e aggiungi nuovi target.');
+      if (t.impression >= 1000 && t.ctr != null && t.ctr < SOGLIA_CTR) tips.push('CTR ' + pct2(t.ctr) + ' basso: chi vede l\'annuncio non clicca. Guarda copertina, titolo, prezzo e recensioni del libro, e controlla che i target siano pertinenti.');
+      if (t.cpc != null && t.cpc > SOGLIA_CPC) tips.push('CPC ' + eur(t.cpc) + ' alto: abbassa le offerte sui target che spendono di più.');
+      if (t.acos != null && t.acos > SOGLIA_ACOS) tips.push('ACOS ' + pct(t.acos) + ' sopra il 40%: lavora sui target che spendono molto e vendono poco (vedi la tabella sopra).');
+      if (t.click >= 10 && t.ordini === 0) tips.push(int(t.click) + ' click senza nessuna vendita: probabile problema nella pagina del libro (prezzo, descrizione, recensioni) o target poco pertinenti.');
+      var fin = rs.filter(function(x){ return x.ora_esaurimento; });
+      if (fin.length) tips.push('Budget finito in ' + fin.length + ' giorni su ' + g + '. ' + ((t.acos != null && t.acos <= SOGLIA_ACOS) ? 'La campagna rende: ha senso lasciare più budget.' : 'Prima di alzare il budget, riduci lo spreco sui target.'));
+      if (tips.length) out.push({titolo:first.libro + ' · ' + first.tipo, tips:tips, peso:tips.length});
+    });
+    out.sort(function(a,b){ return b.peso - a.peso; });
+    if (!out.length){ var li = document.createElement('li'); li.className = 'ads-empty'; li.textContent = 'Nel periodo scelto nessuna campagna supera le soglie: niente da correggere.'; ul.replaceChildren(li); return; }
+    ul.replaceChildren.apply(ul, out.slice(0, 8).map(function(o){
+      var li = document.createElement('li'), b = document.createElement('b'); b.textContent = o.titolo; li.appendChild(b);
+      o.tips.forEach(function(t){ var p = document.createElement('p'); p.textContent = t; li.appendChild(p); });
+      return li;
+    }));
+  });
+
+  // ---------- pulsanti statici
+  var quick = document.getElementById('quick');
+  if (quick) quick.addEventListener('click', function(ev){
+    var b = ev.target.closest ? ev.target.closest('button[data-q]') : null; if (!b) return;
+    var L = ensure(); if (!L) return;
+    var q = b.getAttribute('data-q'), mx = L.max;
+    if (q === 'oggi') setRange(mx, mx);
+    else if (q === 'ieri'){ var y = addDays(mx, -1); setRange(y < L.min ? L.min : y, y < L.min ? L.min : y); }
+    else if (q === '7g'){ var f = addDays(mx, -6); setRange(f < L.min ? L.min : f, mx); }
+    else if (q === 'sett-scorsa'){
+      var dow = (parse(mx).getUTCDay() + 6) % 7, mon = addDays(mx, -dow - 7), sun = addDays(mon, 6);
+      setRange(mon < L.min ? L.min : mon, sun < L.min ? L.min : sun);
+    }
+    else if (q === 'mese'){ var m1 = mx.slice(0,7) + '-01'; setRange(m1 < L.min ? L.min : m1, mx); }
+    else if (q === 'tutto') setRange(L.min, mx);
+  });
+  var prev = document.getElementById('calprev'), next = document.getElementById('calnext');
+  function mese(delta){
+    var L = ensure(); if (!L) return;
+    var d = parse(state.view); var n = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + delta, 1)); var s = iso(n);
+    if (s.slice(0,7) < L.min.slice(0,7) || s.slice(0,7) > L.max.slice(0,7)) return;
+    state.view = s; dash.draw('calmese'); dash.draw('calendario');
+  }
+  if (prev) prev.addEventListener('click', function(){ mese(-1); });
+  if (next) next.addEventListener('click', function(){ mese(1); });
+})();
+</script>
+<script>
+(function(){
+  var KEY='adsdash_pw', URL_='data.enc.json', DOC=null;
+  var gate=document.getElementById('gate'), app=document.getElementById('app'), err=document.getElementById('err');
+  function b64(s){ var b=atob(s), u=new Uint8Array(b.length); for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i); return u; }
+  async function decifra(enc,pw){
+    var km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+    var k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(enc.salt),iterations:enc.iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['decrypt']);
+    var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(enc.iv)},k,b64(enc.ct));
+    return JSON.parse(new TextDecoder().decode(pt));
+  }
+  function ora(iso){
+    if(!iso) return 'mai';
+    var d=new Date(iso); if(isNaN(d)) return iso;
+    return d.toLocaleString('it-IT',{timeZone:'Europe/Rome',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
+  }
+  function mostra(doc){
+    ['righe','target','azioni','regole'].forEach(function(k){ window.__D[k]=doc[k]||[]; });
+    document.getElementById('agg').textContent='Dati veri di Amazon Ads · aggiornati il '+ora(doc.aggiornato)+' (ora italiana). Il bot lavora in sola lettura: propone, non cambia nulla. Le vendite sono solo quelle attribuite alle pubblicità.';
+    gate.hidden=true; app.hidden=false;
+    Object.keys(window.__draws).forEach(function(n){ window.dash.draw(n); });
+  }
+  async function carica(pw,silenzioso){
+    var r; try{ r=await fetch(URL_+'?t='+Date.now(),{cache:'no-store'}); }catch(e){ if(!silenzioso) err.textContent='Nessuna connessione.'; return false; }
+    if(!r.ok){ if(!silenzioso) err.textContent='Dati non ancora pubblicati. Riprova tra poco.'; return false; }
+    var enc=await r.json(), doc;
+    try{ doc=await decifra(enc,pw); }catch(e){ if(!silenzioso) err.textContent='Password sbagliata.'; try{localStorage.removeItem(KEY);}catch(_){} return false; }
+    try{localStorage.setItem(KEY,pw);}catch(_){}
+    mostra(doc); return true;
+  }
+  document.getElementById('f').addEventListener('submit',function(e){ e.preventDefault(); err.textContent=''; carica(document.getElementById('pw').value,false); });
+  var saved=null; try{saved=localStorage.getItem(KEY);}catch(_){}
+  if(saved){ carica(saved,true).then(function(ok){ if(!ok) gate.hidden=false; }); } else gate.hidden=false;
+  setInterval(function(){ var p=null; try{p=localStorage.getItem(KEY);}catch(_){} if(p&&!document.hidden) carica(p,true); },600000);
+})();
+</script>
+</body></html>
