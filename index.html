@@ -226,7 +226,8 @@ window.dash={
   function diffDays(a, b){ return Math.round((parse(b) - parse(a)) / DAY); }
   function limiti(r){
     var d = r.map(function(x){return x.data;}).sort();
-    return {min:d[0], max:d[d.length-1]};
+    var oggi = new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Rome'}).format(new Date());
+    return {min:d[0], max:(oggi > d[d.length-1] ? oggi : d[d.length-1])};
   }
   function ensure(){
     var r = righe(); if (!r || !r.length) return null;
