@@ -94,16 +94,73 @@ body{padding:12px}
 .ads-tips p::before{content:"→ ";color:var(--cy)}
 .ads-note{font-size:12px;color:var(--mut);margin:12px 0 0;line-height:1.5}
 .ads-empty{color:var(--mut);font-size:13.5px}
+
+.ads-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.ads-tabs button{background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:8px 16px;font-size:14px;font-weight:600;color:var(--mut)}
+.ads-tabs button[aria-selected="true"]{border-color:var(--cy);color:#04101c;background:var(--cy);box-shadow:0 0 14px rgba(34,228,255,.35)}
+.ads-view{display:flex;flex-direction:column;gap:18px}
+.ads-view[hidden]{display:none}
+.cv-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.cv-mese{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;text-transform:capitalize}
+.cv-mese button{background:var(--bg2);border:1px solid var(--line);border-radius:8px;width:34px;height:32px}
+.cv-mese button:disabled{opacity:.3;cursor:default}
+.ads select{background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font:inherit;font-size:14px}
+.cv-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.cv-chips button{background:var(--bg2);border:1px solid var(--line);border-radius:99px;padding:5px 11px;font-size:12.5px;opacity:.45}
+.cv-chips button[aria-pressed="true"]{opacity:1;border-color:var(--c)}
+.cv-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.cv-sum div{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.cv-sum span{display:block;font-size:11.5px;color:var(--mut)}
+.cv-sum b{display:block;font:600 18px ui-monospace,Menlo,Consolas,monospace;margin-top:4px;font-variant-numeric:tabular-nums}
+.cv-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cv-grid .h{color:var(--mut);text-align:center;font-size:11px;padding:2px 0}
+.cv-day{position:relative;min-height:98px;text-align:left;background:rgba(255,255,255,.025);border:1px solid var(--line);border-left:3px solid var(--line);border-radius:10px;padding:6px 7px;display:flex;flex-direction:column;gap:3px;font-variant-numeric:tabular-nums}
+.cv-day.vuoto{visibility:hidden}
+.cv-day:disabled{opacity:.35;cursor:default}
+.cv-day[data-acos="good"]{border-left-color:var(--gr)}
+.cv-day[data-acos="warn"]{border-left-color:var(--am)}
+.cv-day[data-acos="bad"]{border-left-color:var(--rd)}
+.cv-day[data-oggi="1"]{outline:1px dashed var(--cy);outline-offset:1px}
+.cv-day[data-sel="1"]{border-color:var(--cy);box-shadow:0 0 14px rgba(34,228,255,.35)}
+.cv-day[data-oltre="1"]{background:rgba(255,77,109,.10)}
+.cv-n{font-weight:700;font-size:13px;display:flex;justify-content:space-between;gap:4px}
+.cv-n i{font-style:normal;font-size:10px;color:var(--cy);font-weight:600}
+.cv-m{font:11px ui-monospace,Menlo,Consolas,monospace;color:var(--mut);line-height:1.35}
+.cv-m b{color:var(--fg);font-weight:600}
+.cv-ic{display:flex;flex-wrap:wrap;gap:3px;margin-top:auto}
+.cv-ic span{font:600 10.5px ui-monospace,Menlo,Consolas,monospace;border-radius:6px;padding:1px 4px;border:1px solid var(--c);color:var(--c)}
+@media (max-width:640px){.cv-n i{display:none}.cv-day{min-height:62px;padding:4px}.cv-m{display:none}.cv-ic span{padding:0 3px;font-size:9.5px}.cv-grid{gap:3px}}
+.cv-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mut);margin-top:10px}
+.cv-leg span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px;background:var(--c)}
+.cv-det h3{margin:0 0 10px;font-size:17px}
+.cv-kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:14px}
+.cv-kp div{border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.cv-kp span{display:block;font-size:11px;color:var(--mut)}
+.cv-kp b{font:600 16px ui-monospace,Menlo,Consolas,monospace}
+.cv-gr{margin:12px 0 4px;font:600 12px ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;color:var(--c)}
+.cv-ev{list-style:none;margin:0;padding:0}
+.cv-ev li{font-size:13px;padding:6px 0;border-bottom:1px solid rgba(27,42,69,.7);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cv-ev small{color:var(--mut)}
+.cv-ev button{background:none;border:0;color:var(--cy);padding:6px 0;font-size:12.5px}
+.ads-al.warn{border-color:var(--am);background:rgba(255,184,0,.08);box-shadow:none}
+.ads-al.good{border-color:var(--gr);background:rgba(56,249,166,.07);box-shadow:none}
 </style></head><body>
 <div id="gate" hidden><h1>Ads Libri</h1><p>Inserisci la password</p>
 <form id="f"><input id="pw" type="password" autocomplete="current-password" placeholder="Password"><button type="submit">Entra</button></form><div id="err"></div></div>
 <div id="app" hidden><div class="ads">
   <div>
-    <div class="ads-kick">Bot Ads · solo lettura</div>
+    <div class="ads-kick">Bot Ads</div>
     <h1 class="ads-title">Ads Libri</h1>
     <p class="ads-take" data-draw="takeaway">—</p>
   </div>
+  <div class="ads-tabs" role="tablist">
+    <button type="button" role="tab" data-vista="pan" aria-selected="true">Panoramica</button>
+    <button type="button" role="tab" data-vista="cal" aria-selected="false">Calendario</button>
+    <button type="button" role="tab" data-vista="prof" aria-selected="false">Dove spendiamo troppo</button>
+  </div>
   <div class="ads-demo" id="agg">Caricamento…</div>
+
+  <div class="ads-view" id="v-pan">
 
   <div class="ads-card">
     <h2 class="ads-sec">Periodo</h2>
@@ -199,9 +256,51 @@ body{padding:12px}
     <ul class="ads-tips" data-draw="consigli" data-source="righe"></ul>
     <p class="ads-note">Soglie usate: CTR sotto 0,30%, CPC sopra 0,60 $, ACOS sopra 40%, impression sotto 2.000 al giorno per campagna. Il rango organico non si legge dalle API di Amazon Ads: lo si segue con il report vendite del KDP.</p>
   </div>
+  </div><!-- fine panoramica -->
+
+  <div class="ads-view" id="v-cal" data-draw="cvall" hidden>
+    <div class="ads-card">
+      <div class="cv-bar">
+        <div class="cv-mese"><button type="button" id="cvprev" aria-label="Mese precedente">‹</button><span id="cvmese">—</span><button type="button" id="cvnext" aria-label="Mese successivo">›</button></div>
+        <select id="cvlibro" aria-label="Libro"><option value="">Tutti i libri</option></select>
+      </div>
+      <div class="cv-chips" id="cvchips"></div>
+    </div>
+    <div class="cv-sum" id="cvsum"></div>
+    <div class="ads-card">
+      <div class="cv-grid" id="cvgrid"></div>
+      <div class="cv-leg" id="cvleg"></div>
+    </div>
+    <div class="ads-card cv-det" id="cvdet"></div>
+    <div class="ads-card">
+      <h2 class="ads-sec">Effetto dei cambi di prezzo (7 giorni prima e dopo)</h2>
+      <div class="ads-wrap"><table>
+        <thead><tr><th>Giorno</th><th>Libro</th><th>Cambio</th><th class="n">Ordini/giorno prima</th><th class="n">Ordini/giorno dopo</th><th class="n">ACOS prima</th><th class="n">ACOS dopo</th><th class="n">CTR prima</th><th class="n">CTR dopo</th></tr></thead>
+        <tbody id="cveff"></tbody>
+      </table></div>
+      <p class="ads-note">Solo vendite attribuite alle pubblicità. Con meno di 3 giorni dopo il cambio il confronto non è ancora affidabile.</p>
+    </div>
+    <div class="ads-card">
+      <h2 class="ads-sec">Prezzi, royalty e tetti attuali</h2>
+      <div class="ads-wrap"><table>
+        <thead><tr><th>Libro</th><th class="n">Prezzo</th><th class="n">Royalty</th><th class="n">ACOS di pareggio</th><th class="n">Offerta massima keyword</th><th class="n">Offerta massima ASIN</th><th>Ultimo cambio</th></tr></thead>
+        <tbody id="cvprezzi"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="ads-view" id="v-prof" data-draw="pfall" hidden>
+    <div id="pfbox"></div>
+  </div>
 </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+<script>
+d3.timeFormatDefaultLocale({dateTime:'%A %e %B %Y, %X', date:'%d/%m/%Y', time:'%H:%M:%S', periods:['AM','PM'],
+  days:['domenica','lunedì','martedì','mercoledì','giovedì','venerdì','sabato'], shortDays:['dom','lun','mar','mer','gio','ven','sab'],
+  months:['gennaio','febbraio','marzo','aprile','maggio','giugno','luglio','agosto','settembre','ottobre','novembre','dicembre'],
+  shortMonths:['gen','feb','mar','apr','mag','giu','lug','ago','set','ott','nov','dic']});
+</script>
 <script>
 window.__D={}; window.__draws={};
 window.dash={
@@ -574,6 +673,395 @@ window.dash={
 </script>
 <script>
 (function(){
+  // ======================= schede =======================
+  var tabs = document.querySelectorAll('.ads-tabs button');
+  function vai(v){
+    tabs.forEach(function(b){ b.setAttribute('aria-selected', b.getAttribute('data-vista') === v ? 'true' : 'false'); });
+    ['pan','cal','prof'].forEach(function(k){ var e = document.getElementById('v-' + k); if (e) e.hidden = k !== v; });
+    try { localStorage.setItem('adsdash_vista', v); } catch(_){}
+    if (v === 'pan') Object.keys(window.__draws).forEach(function(n){ if (n !== 'cvall' && n !== 'pfall') dash.draw(n); });
+    if (v === 'cal') dash.draw('cvall');
+    if (v === 'prof') dash.draw('pfall');
+  }
+  tabs.forEach(function(b){ b.addEventListener('click', function(){ vai(b.getAttribute('data-vista')); }); });
+  var vs = null; try { vs = localStorage.getItem('adsdash_vista'); } catch(_){}
+  if (vs === 'cal' || vs === 'prof') vai(vs);
+
+  // ======================= strumenti =======================
+  var parse = d3.utcParse('%Y-%m-%d'), iso = d3.utcFormat('%Y-%m-%d');
+  var fmtLong = d3.utcFormat('%d/%m/%Y'), fmtMese = d3.utcFormat('%B %Y');
+  var eur = d3.format('$,.2f'), eur0 = d3.format('$,.0f'), pct = d3.format('.1%'), pct2 = d3.format('.2%'), int = d3.format(',d');
+  var DAY = 86400000;
+  var SOGLIA_SPESA = 40;
+  function num(x){ return Number(x) || 0; }
+  function el(tag, cls, txt){ var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+  function oggiRoma(){ return new Intl.DateTimeFormat('en-CA', {timeZone:'Europe/Rome'}).format(new Date()); }
+  function addDays(s, n){ return iso(new Date(parse(s).getTime() + n * DAY)); }
+  function tot(rows){
+    var s = function(k){ return d3.sum(rows, function(x){ return num(x[k]); }); };
+    var sp = s('spesa'), ve = s('vendite'), cl = s('click'), im = s('impression');
+    return {spesa:sp, vendite:ve, ordini:s('ordini'), click:cl, impression:im, acos: ve ? sp / ve : null, ctr: im ? cl / im : null, cpc: cl ? sp / cl : null};
+  }
+  // libro della pagina -> profilo (prezzo/royalty). I nomi possono avere "(account)" in fondo.
+  function profilo(libro, account){
+    var P = window.__D.profili || {}, base = String(libro).replace(/ \((KDP|PublishDrive)\)$/, '');
+    if (account && P[account] && P[account][base]) return P[account][base];
+    for (var a in P){ if (P[a][base]) return P[a][base]; }
+    return null;
+  }
+  function pareggio(libro){ var p = profilo(libro); return p && p.prezzo ? p.royalty / p.prezzo : null; }
+  // colore dell'ACOS: con un libro scelto si confronta con il suo pareggio, con tutti i libri con il 30/40%
+  function tonoAcos(acos, libro){
+    if (acos == null) return '';
+    var pg = libro ? pareggio(libro) : null;
+    if (pg){ return acos <= pg * 0.75 ? 'good' : acos <= pg ? 'warn' : 'bad'; }
+    return acos < 0.30 ? 'good' : acos <= 0.40 ? 'warn' : 'bad';
+  }
+
+  var CAT = [
+    {k:'rialzo',  t:'Rialzi offerta',   s:'▲', c:'#38f9a6'},
+    {k:'ribasso', t:'Ribassi offerta',  s:'▼', c:'#ffb800'},
+    {k:'spento',  t:'Target spenti',    s:'✕', c:'#ff4d6d'},
+    {k:'nuovi',   t:'Target aggiunti',  s:'+', c:'#22e4ff'},
+    {k:'prezzo',  t:'Prezzi e royalty', s:'$', c:'#ff3d9a'},
+    {k:'budget',  t:'Budget',           s:'⚠', c:'#ff8a3d'},
+    {k:'nota',    t:'Note',             s:'✎', c:'#c9a7ff'},
+    {k:'altro',   t:'Altro',            s:'•', c:'#7f93b5'}
+  ];
+  var CATK = {}; CAT.forEach(function(c){ CATK[c.k] = c; });
+  var cv = {mese:null, sel:null, libro:'', attive:{}, aperti:{}};
+  CAT.forEach(function(c){ cv.attive[c.k] = true; });
+
+  function righe(){ return window.__D.righe || []; }
+  function eventi(){
+    // "Budget finito" si vede gia' dalle righe (ora di esaurimento): non lo conto due volte
+    return (window.__D.eventi || []).filter(function(e){ return e.titolo !== 'Budget finito'; });
+  }
+  function filtroLibro(x){ return !cv.libro || x.libro === cv.libro; }
+  function limiti(){
+    var d = righe().map(function(x){ return x.data; }).concat(eventi().map(function(x){ return x.data; })).sort();
+    var o = oggiRoma();
+    return {min: d[0] || o, max: (d.length && d[d.length - 1] > o) ? d[d.length - 1] : o};
+  }
+
+  // ======================= calendario =======================
+  dash.draw('cvall', function(){
+    var R = righe(), E = eventi(), L = limiti();
+    if (!cv.mese) cv.mese = L.max.slice(0, 7) + '-01';
+    // libri nel menu
+    var sel = document.getElementById('cvlibro');
+    var libri = Array.from(new Set(R.map(function(x){ return x.libro; }).concat(E.map(function(x){ return x.libro; })))).filter(function(l){ return l && l !== 'TUTTI'; }).sort();
+    if (sel.options.length !== libri.length + 1){
+      var v = sel.value; sel.replaceChildren(el('option', null, 'Tutti i libri')); sel.options[0].value = '';
+      libri.forEach(function(l){ var o = el('option', null, l); o.value = l; sel.appendChild(o); });
+      sel.value = v;
+    }
+    // pulsanti categorie
+    var chips = document.getElementById('cvchips');
+    if (!chips.childNodes.length){
+      CAT.forEach(function(c){
+        var b = el('button', null, c.s + ' ' + c.t); b.type = 'button'; b.style.setProperty('--c', c.c); b.style.color = c.c;
+        b.setAttribute('aria-pressed', 'true');
+        b.onclick = function(){ cv.attive[c.k] = !cv.attive[c.k]; b.setAttribute('aria-pressed', cv.attive[c.k] ? 'true' : 'false'); disegna(); };
+        chips.appendChild(b);
+      });
+    }
+    disegna();
+  });
+
+  function eventiFiltrati(){
+    return eventi().filter(function(e){ return cv.attive[CATK[e.cat] ? e.cat : 'altro'] && (!cv.libro || e.libro === cv.libro || e.libro === 'TUTTI'); });
+  }
+  function budgetFiniti(R){ return cv.attive.budget ? R.filter(function(x){ return x.ora_esaurimento; }) : []; }
+
+  function disegna(){
+    var R = righe().filter(filtroLibro), E = eventiFiltrati(), L = limiti();
+    var first = parse(cv.mese), y = first.getUTCFullYear(), m = first.getUTCMonth();
+    var nDays = Math.round((new Date(Date.UTC(y, m + 1, 1)) - first) / DAY);
+    var mIni = cv.mese, mFin = iso(new Date(Date.UTC(y, m, nDays)));
+    document.getElementById('cvmese').textContent = fmtMese(first);
+    document.getElementById('cvprev').disabled = cv.mese.slice(0, 7) <= L.min.slice(0, 7);
+    document.getElementById('cvnext').disabled = cv.mese.slice(0, 7) >= L.max.slice(0, 7);
+    var perG = d3.group(R, function(x){ return x.data; });
+    var evG = d3.group(E, function(x){ return x.data; });
+    var spesaTutti = d3.rollup(righe(), function(v){ return d3.sum(v, function(x){ return num(x.spesa); }); }, function(x){ return x.data; });
+    var oggi = oggiRoma();
+    if (!cv.sel || cv.sel < mIni || cv.sel > mFin){
+      var conDati = Array.from(perG.keys()).concat(Array.from(evG.keys())).filter(function(d){ return d >= mIni && d <= mFin; }).sort();
+      cv.sel = conDati.length ? conDati[conDati.length - 1] : (oggi >= mIni && oggi <= mFin ? oggi : mIni);
+    }
+
+    // riepilogo del mese
+    var Rm = R.filter(function(x){ return x.data >= mIni && x.data <= mFin; }), tm = tot(Rm);
+    var Em = E.filter(function(x){ return x.data >= mIni && x.data <= mFin; });
+    var conta = d3.rollup(Em, function(v){ return v.length; }, function(x){ return x.cat; });
+    var champGiorni = champRighe().filter(function(x){ return x.data >= mIni && x.data <= mFin && (!cv.libro || x.libro === cv.libro); });
+    var sum = [['Spesa Ads', eur(tm.spesa)], ['Vendite da Ads', eur(tm.vendite)], ['ACOS', tm.acos == null ? '—' : pct(tm.acos)], ['Ordini da Ads', int(tm.ordini)]];
+    if (champGiorni.length) sum.push(['Royalty totali (Publisher Champ)', eur(d3.sum(champGiorni, function(x){ return x.royalty; }))]);
+    sum.push(['▲ Rialzi · ▼ Ribassi', int(conta.get('rialzo') || 0) + ' · ' + int(conta.get('ribasso') || 0)]);
+    sum.push(['✕ Spenti · + Aggiunti', int(conta.get('spento') || 0) + ' · ' + int(conta.get('nuovi') || 0)]);
+    sum.push(['$ Cambi prezzo/royalty', int(conta.get('prezzo') || 0)]);
+    sum.push(['⚠ Budget finiti', int(budgetFiniti(Rm).length)]);
+    document.getElementById('cvsum').replaceChildren.apply(document.getElementById('cvsum'), sum.map(function(s){ var d = el('div'); d.appendChild(el('span', null, s[0])); d.appendChild(el('b', null, s[1])); return d; }));
+
+    // griglia
+    var cells = [];
+    ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'].forEach(function(t){ cells.push(el('div', 'h', t)); });
+    var offset = (first.getUTCDay() + 6) % 7, total = Math.ceil((offset + nDays) / 7) * 7;
+    for (var i = 0; i < total; i++){
+      var dn = i - offset + 1;
+      var b = el('button', 'cv-day'); b.type = 'button';
+      if (dn < 1 || dn > nDays){ b.className += ' vuoto'; b.disabled = true; cells.push(b); continue; }
+      var ds = iso(new Date(Date.UTC(y, m, dn)));
+      var rs = perG.get(ds) || [], es = evG.get(ds) || [], t = tot(rs);
+      var n = el('div', 'cv-n'); n.appendChild(el('span', null, String(dn))); if (ds === oggi){ n.appendChild(el('i', null, 'OGGI')); b.setAttribute('data-oggi', '1'); }
+      b.appendChild(n);
+      if (rs.length){
+        var mm = el('div', 'cv-m');
+        mm.appendChild(document.createTextNode('spesa ')); mm.appendChild(el('b', null, eur0(t.spesa)));
+        mm.appendChild(el('br')); mm.appendChild(document.createTextNode('vend. ')); mm.appendChild(el('b', null, eur0(t.vendite)));
+        mm.appendChild(el('br')); mm.appendChild(document.createTextNode('ACOS ' + (t.acos == null ? '—' : d3.format('.0%')(t.acos))));
+        b.appendChild(mm);
+        var tn = tonoAcos(t.acos, cv.libro); if (tn) b.setAttribute('data-acos', tn);
+      }
+      if (!cv.libro && (spesaTutti.get(ds) || 0) > SOGLIA_SPESA) b.setAttribute('data-oltre', '1');
+      var ic = el('div', 'cv-ic'), cnt = d3.rollup(es, function(v){ return v.length; }, function(x){ return CATK[x.cat] ? x.cat : 'altro'; });
+      var bf = budgetFiniti(rs).length; if (bf) cnt.set('budget', (cnt.get('budget') || 0) + bf);
+      CAT.forEach(function(c){ var k = cnt.get(c.k); if (k){ var s = el('span', null, c.s + (k > 1 ? k : '')); s.style.setProperty('--c', c.c); s.title = c.t + ': ' + k; ic.appendChild(s); } });
+      b.appendChild(ic);
+      b.disabled = ds < L.min || ds > L.max;
+      if (ds === cv.sel) b.setAttribute('data-sel', '1');
+      b.setAttribute('aria-label', fmtLong(parse(ds)));
+      (function(ds){ b.onclick = function(){ cv.sel = ds; disegna(); var d = document.getElementById('cvdet'); if (d && d.scrollIntoView && window.innerWidth < 700) d.scrollIntoView({behavior:'smooth', block:'start'}); }; })(ds);
+      cells.push(b);
+    }
+    var g = document.getElementById('cvgrid'); g.replaceChildren.apply(g, cells);
+
+    var leg = document.getElementById('cvleg'), li = [];
+    var testoAcos = cv.libro && pareggio(cv.libro) ? 'ACOS sotto il 75% del pareggio di ' + cv.libro + ' (' + pct(pareggio(cv.libro)) + ')' : 'ACOS sotto il 30%';
+    [['#38f9a6', testoAcos], ['#ffb800', cv.libro && pareggio(cv.libro) ? 'ACOS vicino al pareggio' : 'ACOS 30–40%'], ['#ff4d6d', cv.libro && pareggio(cv.libro) ? 'ACOS sopra il pareggio (in perdita)' : 'ACOS sopra il 40%']].forEach(function(x){ var s = el('span', null, x[1]); s.style.setProperty('--c', x[0]); li.push(s); });
+    if (!cv.libro){ var s2 = el('span', null, 'sfondo rosso: spesa totale sopra 40 $'); s2.style.setProperty('--c', 'rgba(255,77,109,.5)'); li.push(s2); }
+    leg.replaceChildren.apply(leg, li);
+
+    dettaglio(cv.sel, perG.get(cv.sel) || [], evG.get(cv.sel) || []);
+    effetti(); prezzi();
+  }
+
+  function dettaglio(ds, rs, es){
+    var box = document.getElementById('cvdet'), out = [];
+    var dd = parse(ds), nomeG = d3.utcFormat('%A')(dd);
+    out.push(el('h3', null, nomeG.charAt(0).toUpperCase() + nomeG.slice(1) + ' ' + fmtLong(dd) + (cv.libro ? ' · ' + cv.libro : ' · tutti i libri')));
+    var t = tot(rs), kp = el('div', 'cv-kp');
+    var cg = champRighe().filter(function(x){ return x.data === ds && (!cv.libro || x.libro === cv.libro); });
+    var voci = [['Spesa', eur(t.spesa)], ['Vendite da Ads', eur(t.vendite)], ['Ordini da Ads', int(t.ordini)], ['ACOS', t.acos == null ? '—' : pct(t.acos)],
+                ['Click', int(t.click)], ['Impression', int(t.impression)], ['CTR', t.ctr == null ? '—' : pct2(t.ctr)], ['CPC', t.cpc == null ? '—' : eur(t.cpc)]];
+    if (cg.length){ voci.push(['Royalty del giorno', eur(d3.sum(cg, function(x){ return x.royalty; }))]); voci.push(['Copie vendute (tutte)', int(d3.sum(cg, function(x){ return x.copie; }))]); }
+    voci.forEach(function(v){ var d = el('div'); d.appendChild(el('span', null, v[0])); d.appendChild(el('b', null, v[1])); kp.appendChild(d); });
+    if (!rs.length) out.push(el('p', 'ads-empty', 'Nessun dato Ads per questo giorno.')); else out.push(kp);
+
+    // per libro (solo con tutti i libri)
+    if (!cv.libro && rs.length){
+      var w = el('div', 'ads-wrap'), tb = el('table'), th = el('thead'), tr = el('tr');
+      ['Libro', 'Spesa', 'Vendite', 'Ordini', 'ACOS', 'Click', 'Budget finito'].forEach(function(h, i){ tr.appendChild(el('th', i && i < 6 ? 'n' : null, h)); });
+      th.appendChild(tr); tb.appendChild(th);
+      var body = el('tbody');
+      d3.groups(rs, function(x){ return x.libro; }).sort(function(a, b){ return d3.sum(b[1], function(x){ return num(x.spesa); }) - d3.sum(a[1], function(x){ return num(x.spesa); }); }).forEach(function(gr){
+        var tt = tot(gr[1]), r = el('tr', 'pick');
+        r.appendChild(el('td', null, gr[0])); r.appendChild(el('td', 'n', eur(tt.spesa))); r.appendChild(el('td', 'n', eur(tt.vendite))); r.appendChild(el('td', 'n', int(tt.ordini)));
+        var ca = el('td', 'n', tt.acos == null ? '—' : pct(tt.acos)); var tn = tonoAcos(tt.acos, gr[0]); if (tn) ca.className = 'n ' + (tn === 'warn' ? 'low' : tn); r.appendChild(ca);
+        r.appendChild(el('td', 'n', int(tt.click)));
+        var f = gr[1].filter(function(x){ return x.ora_esaurimento; });
+        r.appendChild(el('td', null, f.length ? f.map(function(x){ return (x.tipo.indexOf('KEYWORD') === 0 ? 'KW' : x.tipo.indexOf('PRODUCT') === 0 ? 'PR' : x.tipo) + ' ' + x.ora_esaurimento; }).join(', ') : '—'));
+        r.onclick = function(){ cv.libro = gr[0]; document.getElementById('cvlibro').value = gr[0]; disegna(); };
+        body.appendChild(r);
+      });
+      tb.appendChild(body); w.appendChild(tb); out.push(w);
+    }
+
+    // eventi del giorno, per categoria
+    var bfin = budgetFiniti(rs).map(function(x){ return {cat:'budget', libro:x.libro, tipo:x.tipo, titolo:'Budget finito', dettaglio:'alle ' + x.ora_esaurimento + ' (budget ' + eur0(num(x.budget)) + ')', motivo:''}; });
+    var tutti = es.concat(bfin);
+    if (!tutti.length) out.push(el('p', 'ads-empty', 'Nessuna modifica o evento in questo giorno.'));
+    CAT.forEach(function(c){
+      var lst = tutti.filter(function(e){ return (CATK[e.cat] ? e.cat : 'altro') === c.k; });
+      if (!lst.length) return;
+      var h = el('div', 'cv-gr', c.s + ' ' + c.t + ' (' + lst.length + ')'); h.style.setProperty('--c', c.c); out.push(h);
+      var ul = el('ul', 'cv-ev'), chiave = ds + c.k, max = cv.aperti[chiave] ? lst.length : 8;
+      lst.slice(0, max).forEach(function(e){
+        var l = el('li'), a = el('div');
+        a.appendChild(el('b', null, e.libro + (e.tipo && e.tipo !== 'LIBRO' && e.tipo !== 'TUTTI' ? ' · ' + e.tipo : '')));
+        a.appendChild(document.createTextNode(' — ' + e.dettaglio));
+        l.appendChild(a); if (e.motivo) l.appendChild(el('small', null, e.motivo));
+        ul.appendChild(l);
+      });
+      if (lst.length > max){ var lb = el('li'), bt = el('button', null, 'Mostra tutti (' + (lst.length - max) + ' in più)'); bt.type = 'button'; bt.onclick = function(){ cv.aperti[chiave] = true; dettaglio(ds, rs, es); }; lb.appendChild(bt); ul.appendChild(lb); }
+      out.push(ul);
+    });
+    box.replaceChildren.apply(box, out);
+  }
+
+  // effetto dei cambi di prezzo: 7 giorni prima e dopo, per il libro
+  function effetti(){
+    var tb = document.getElementById('cveff');
+    var E = (window.__D.eventi || []).filter(function(e){ return e.cat === 'prezzo' && e.titolo === 'Prezzo cambiato' && (!cv.libro || e.libro === cv.libro); }).sort(function(a, b){ return a.data < b.data ? 1 : -1; });
+    if (!E.length){ var r0 = el('tr'), c0 = el('td', 'ads-empty', 'Nessun cambio di prezzo registrato.'); c0.colSpan = 9; r0.appendChild(c0); tb.replaceChildren(r0); return; }
+    var oggi = oggiRoma();
+    tb.replaceChildren.apply(tb, E.map(function(e){
+      var R = righe().filter(function(x){ return x.libro === e.libro; });
+      var pr = R.filter(function(x){ return x.data >= addDays(e.data, -7) && x.data < e.data; });
+      var fine = addDays(e.data, 7) < oggi ? addDays(e.data, 7) : oggi;
+      var dp = R.filter(function(x){ return x.data > e.data && x.data <= fine; });
+      var gp = new Set(pr.map(function(x){ return x.data; })).size, gd = new Set(dp.map(function(x){ return x.data; })).size;
+      var a = tot(pr), b = tot(dp), r = el('tr');
+      r.appendChild(el('td', null, fmtLong(parse(e.data)))); r.appendChild(el('td', null, e.libro)); r.appendChild(el('td', 'w', e.dettaglio));
+      r.appendChild(el('td', 'n', gp ? d3.format('.2f')(a.ordini / gp) : '—'));
+      r.appendChild(el('td', 'n', gd ? d3.format('.2f')(b.ordini / gd) + (gd < 3 ? ' (' + gd + ' g)' : '') : 'in attesa'));
+      r.appendChild(el('td', 'n', a.acos == null ? '—' : pct(a.acos))); r.appendChild(el('td', 'n', b.acos == null ? '—' : pct(b.acos)));
+      r.appendChild(el('td', 'n', a.ctr == null ? '—' : pct2(a.ctr))); r.appendChild(el('td', 'n', b.ctr == null ? '—' : pct2(b.ctr)));
+      return r;
+    }));
+  }
+
+  function prezzi(){
+    var tb = document.getElementById('cvprezzi'), P = window.__D.profili || {}, out = [];
+    var ultimo = {}; (window.__D.eventi || []).filter(function(e){ return e.cat === 'prezzo'; }).sort(function(a, b){ return a.data < b.data ? -1 : 1; }).forEach(function(e){ ultimo[e.libro] = e; });
+    Object.keys(P).forEach(function(acc){
+      Object.keys(P[acc]).sort().forEach(function(lib){
+        if (cv.libro && cv.libro !== lib) return;
+        var p = P[acc][lib], r = el('tr');
+        r.appendChild(el('td', null, lib + (Object.keys(P).length > 1 ? ' (' + acc + ')' : '')));
+        r.appendChild(el('td', 'n', p.prezzo ? eur(p.prezzo) : '—')); r.appendChild(el('td', 'n', eur(p.royalty)));
+        r.appendChild(el('td', 'n', p.prezzo ? pct(p.royalty / p.prezzo) : '—'));
+        r.appendChild(el('td', 'n', p.tetto_kw == null ? '—' : eur(p.tetto_kw))); r.appendChild(el('td', 'n', p.tetto_asin == null ? '—' : eur(p.tetto_asin)));
+        var u = ultimo[lib]; r.appendChild(el('td', 'w', u ? fmtLong(parse(u.data)) + ' · ' + u.dettaglio : '—'));
+        out.push(r);
+      });
+    });
+    tb.replaceChildren.apply(tb, out);
+  }
+
+  document.getElementById('cvlibro').addEventListener('change', function(ev){ cv.libro = ev.target.value; disegna(); });
+  function mese(d){ var x = parse(cv.mese); cv.mese = iso(new Date(Date.UTC(x.getUTCFullYear(), x.getUTCMonth() + d, 1))); cv.sel = null; disegna(); }
+  document.getElementById('cvprev').addEventListener('click', function(){ mese(-1); });
+  document.getElementById('cvnext').addEventListener('click', function(){ mese(1); });
+
+  // ======================= Publisher Champ =======================
+  function champ(){ var c = window.__D.champ || {}; return c.KDP || c[Object.keys(c)[0]] || null; }
+  function champRighe(){ var c = champ(); return (c && c.giorni) || []; }
+  var pf = {per:'30'};
+
+  dash.draw('pfall', function(){
+    var box = document.getElementById('pfbox'), c = champ(), out = [];
+    if (!c){
+      var card = el('div', 'ads-card');
+      card.appendChild(el('h2', 'ads-sec', 'Publisher Champ non ancora collegato'));
+      card.appendChild(el('p', 'ads-take', 'Questa pagina mette accanto la spesa Ads di ogni libro e le royalty vere (anche quelle delle vendite organiche) prese da Publisher Champ: così si vede subito quale libro costa più di quanto rende.'));
+      card.appendChild(el('p', 'ads-note', 'Per attivarla servono la chiave API e l\'ID account di Publisher Champ (profilo → API Access), salvati nei secret del bot come PC_API_KEY e PC_ACCOUNT_ID. Dal giro successivo del bot i dati compaiono qui.'));
+      out.push(card);
+      out.push(sezioneSoloAds());
+      box.replaceChildren.apply(box, out); return;
+    }
+    var giorni = c.giorni || [], haGiorni = giorni.length > 0;
+    var oggi = oggiRoma(), dal;
+    if (!haGiorni) pf.per = 'tutto';
+    dal = pf.per === '7' ? addDays(oggi, -6) : pf.per === '30' ? addDays(oggi, -29) : c.dal;
+    if (dal < c.dal) dal = c.dal;
+
+    var testa = el('div', 'ads-card');
+    testa.appendChild(el('h2', 'ads-sec', 'Spesa Ads contro royalty vere'));
+    var q = el('div', 'ads-quick');
+    [['7', 'Ultimi 7 giorni'], ['30', 'Ultimi 30 giorni'], ['tutto', 'Dal ' + fmtLong(parse(c.dal))]].forEach(function(o){
+      var b = el('button', null, o[1]); b.type = 'button'; if (!haGiorni && o[0] !== 'tutto') b.disabled = true;
+      if (pf.per === o[0]) { b.style.borderColor = 'var(--cy)'; b.style.color = 'var(--cy)'; }
+      b.onclick = function(){ pf.per = o[0]; dash.draw('pfall'); }; q.appendChild(b);
+    });
+    testa.appendChild(q);
+    var sync = (c.sync || []).filter(function(s){ return /kdp|amazon/i.test(s.piattaforma || ''); });
+    testa.appendChild(el('p', 'ads-note', 'Royalty da Publisher Champ, letto il ' + new Date(c.letto).toLocaleString('it-IT', {timeZone:'Europe/Rome', day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit'}) +
+      (sync.length ? ' · KDP completo fino al ' + (sync[0].completo_fino_a || '?') : '') + '. Spesa Ads dal bot (dati Amazon Ads). ' + (haGiorni ? '' : 'Publisher Champ non ha dato il dettaglio giorno per giorno: uso il totale dal ' + fmtLong(parse(c.dal)) + '.')));
+    if ((c.errori || []).length) testa.appendChild(el('p', 'ads-note', 'Avvisi: ' + c.errori.join(' · ')));
+    out.push(testa);
+
+    // royalty per libro nel periodo
+    var roy = haGiorni ? d3.rollups(giorni.filter(function(x){ return x.data >= dal && x.data <= oggi; }), function(v){ return {royalty:d3.sum(v, function(x){ return x.royalty; }), copie:d3.sum(v, function(x){ return x.copie; }), ads:d3.sum(v, function(x){ return x.ordini_ads; })}; }, function(x){ return x.libro; })
+                       : (c.totali || []).map(function(x){ return [x.libro, {royalty:x.royalty, copie:x.copie, ads:x.ordini_ads}]; });
+    var R = righe().filter(function(x){ return x.data >= dal && x.data <= oggi; });
+    var spesa = d3.rollup(R, function(v){ return {spesa:d3.sum(v, function(x){ return num(x.spesa); }), ordini:d3.sum(v, function(x){ return num(x.ordini); })}; }, function(x){ return x.libro; });
+    var libri = new Set(roy.map(function(x){ return x[0]; }).concat(Array.from(spesa.keys())));
+    var M = {}; roy.forEach(function(x){ var k = x[0]; M[k] = M[k] || {royalty:0, copie:0, ads:0}; M[k].royalty += x[1].royalty; M[k].copie += x[1].copie; M[k].ads += x[1].ads; });
+    var rows = Array.from(libri).map(function(l){
+      var r = M[l] || {royalty:0, copie:0, ads:0}, s = spesa.get(l) || {spesa:0, ordini:0};
+      return {libro:l, royalty:r.royalty, copie:r.copie, ordiniAds:s.ordini, spesa:s.spesa, netto:r.royalty - s.spesa, quota: r.royalty ? s.spesa / r.royalty : (s.spesa ? Infinity : null)};
+    }).filter(function(r){ return r.royalty || r.spesa; }).sort(function(a, b){ return a.netto - b.netto; });
+
+    // avvisi in alto: dove si spende troppo
+    var al = el('div', 'ads-alerts');
+    rows.forEach(function(r){
+      if (r.spesa < 5) return;
+      var d;
+      if (r.netto < 0){ d = el('div', 'ads-al'); d.appendChild(el('b', null, r.libro + ': in perdita di ' + eur(-r.netto)));
+        d.appendChild(el('small', null, 'Spesa Ads ' + eur(r.spesa) + ' contro royalty totali ' + eur(r.royalty) + ' (vendite organiche comprese). Qui si spende troppo: guarda i target che spendono senza vendere.')); }
+      else if (r.quota > 0.7){ d = el('div', 'ads-al warn'); d.appendChild(el('b', null, r.libro + ': le Ads si mangiano il ' + d3.format('.0%')(r.quota) + ' delle royalty'));
+        d.appendChild(el('small', null, 'Resta un guadagno di ' + eur(r.netto) + ' su ' + eur(r.royalty) + ' di royalty.')); }
+      if (d) al.appendChild(d);
+    });
+    if (!al.childNodes.length) al.appendChild(el('div', 'ads-calm', 'Nel periodo nessun libro spende in Ads più del 70% di quanto incassa.'));
+    out.push(al);
+
+    var t = d3.sum(rows, function(r){ return r.royalty; }), sp = d3.sum(rows, function(r){ return r.spesa; });
+    var k = el('div', 'cv-sum');
+    [['Royalty totali', eur(t)], ['Spesa Ads', eur(sp)], ['Guadagno dopo le Ads', eur(t - sp)], ['Spesa su royalty', t ? pct(sp / t) : '—']].forEach(function(v){ var d = el('div'); d.appendChild(el('span', null, v[0])); d.appendChild(el('b', null, v[1])); k.appendChild(d); });
+    out.push(k);
+
+    var card = el('div', 'ads-card'), w = el('div', 'ads-wrap'), tb = el('table'), th = el('thead'), trh = el('tr');
+    card.appendChild(el('h2', 'ads-sec', 'Per libro (dal peggiore)'));
+    ['Libro', 'Royalty totali', 'Copie vendute', 'Ordini da Ads', 'Copie organiche (stima)', 'Spesa Ads', 'Guadagno dopo Ads', 'Spesa su royalty'].forEach(function(h, i){ trh.appendChild(el('th', i ? 'n' : null, h)); });
+    th.appendChild(trh); tb.appendChild(th);
+    var body = el('tbody');
+    rows.forEach(function(r){
+      var tr = el('tr');
+      tr.appendChild(el('td', null, r.libro)); tr.appendChild(el('td', 'n', eur(r.royalty))); tr.appendChild(el('td', 'n', int(r.copie)));
+      tr.appendChild(el('td', 'n', int(r.ordiniAds))); tr.appendChild(el('td', 'n', r.copie ? int(Math.max(0, r.copie - r.ordiniAds)) : '—'));
+      tr.appendChild(el('td', 'n', eur(r.spesa)));
+      tr.appendChild(el('td', 'n ' + (r.netto < 0 ? 'bad' : 'good'), eur(r.netto)));
+      tr.appendChild(el('td', 'n ' + (r.quota == null ? '' : r.quota > 1 ? 'bad' : r.quota > 0.7 ? 'low' : 'good'), r.quota == null ? '—' : r.quota === Infinity ? 'nessuna royalty' : pct(r.quota)));
+      body.appendChild(tr);
+    });
+    tb.appendChild(body); w.appendChild(tb); card.appendChild(w);
+    card.appendChild(el('p', 'ads-note', 'Copie organiche = copie vendute (Publisher Champ) meno ordini attribuiti alle Ads: è una stima, perché Amazon attribuisce gli ordini alle Ads entro 7 giorni dal click.'));
+    out.push(card);
+    box.replaceChildren.apply(box, out);
+  });
+
+  // senza Publisher Champ: almeno la spesa per libro degli ultimi 30 giorni dai dati Ads
+  function sezioneSoloAds(){
+    var oggi = oggiRoma(), dal = addDays(oggi, -29);
+    var R = righe().filter(function(x){ return x.data >= dal; });
+    var card = el('div', 'ads-card');
+    card.appendChild(el('h2', 'ads-sec', 'Intanto, solo con i dati Ads (ultimi 30 giorni)'));
+    var w = el('div', 'ads-wrap'), tb = el('table'), th = el('thead'), trh = el('tr');
+    ['Libro', 'Spesa Ads', 'Vendite da Ads', 'ACOS', 'ACOS di pareggio', 'Margine stimato da Ads'].forEach(function(h, i){ trh.appendChild(el('th', i ? 'n' : null, h)); });
+    th.appendChild(trh); tb.appendChild(th);
+    var body = el('tbody');
+    d3.groups(R, function(x){ return x.libro; }).map(function(g){
+      var t = tot(g[1]), p = profilo(g[0]), marg = p && p.prezzo ? t.ordini * p.royalty - t.spesa : null;
+      return {libro:g[0], t:t, pg:p && p.prezzo ? p.royalty / p.prezzo : null, marg:marg};
+    }).sort(function(a, b){ return (a.marg == null ? 1e9 : a.marg) - (b.marg == null ? 1e9 : b.marg); }).forEach(function(r){
+      var tr = el('tr');
+      tr.appendChild(el('td', null, r.libro)); tr.appendChild(el('td', 'n', eur(r.t.spesa))); tr.appendChild(el('td', 'n', eur(r.t.vendite)));
+      tr.appendChild(el('td', 'n ' + (r.t.acos != null && r.pg && r.t.acos > r.pg ? 'bad' : ''), r.t.acos == null ? '—' : pct(r.t.acos)));
+      tr.appendChild(el('td', 'n', r.pg ? pct(r.pg) : '—'));
+      tr.appendChild(el('td', 'n ' + (r.marg == null ? '' : r.marg < 0 ? 'bad' : 'good'), r.marg == null ? '—' : eur(r.marg)));
+      body.appendChild(tr);
+    });
+    tb.appendChild(body); w.appendChild(tb); card.appendChild(w);
+    card.appendChild(el('p', 'ads-note', 'Margine stimato = ordini da Ads × royalty del libro − spesa Ads. Non conta le vendite organiche portate dalle Ads: per quelle serve Publisher Champ.'));
+    return card;
+  }
+})();
+</script>
+<script>
+(function(){
   var KEY='adsdash_pw', URL_='data.enc.json', DOC=null;
   var gate=document.getElementById('gate'), app=document.getElementById('app'), err=document.getElementById('err');
   function b64(s){ var b=atob(s), u=new Uint8Array(b.length); for(var i=0;i<b.length;i++)u[i]=b.charCodeAt(i); return u; }
@@ -589,8 +1077,9 @@ window.dash={
     return d.toLocaleString('it-IT',{timeZone:'Europe/Rome',day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'});
   }
   function mostra(doc){
-    ['righe','target','azioni','regole'].forEach(function(k){ window.__D[k]=doc[k]||[]; });
-    document.getElementById('agg').textContent='Dati veri di Amazon Ads · aggiornati il '+ora(doc.aggiornato)+' (ora italiana). Il bot lavora in sola lettura: propone, non cambia nulla. Le vendite sono solo quelle attribuite alle pubblicità.';
+    ['righe','target','azioni','regole','eventi'].forEach(function(k){ window.__D[k]=doc[k]||[]; });
+    window.__D.profili=doc.profili||{}; window.__D.champ=doc.champ||{};
+    document.getElementById('agg').textContent='Dati veri di Amazon Ads · aggiornati il '+ora(doc.aggiornato)+' (ora italiana). Le vendite sono solo quelle attribuite alle pubblicità.';
     gate.hidden=true; app.hidden=false;
     Object.keys(window.__draws).forEach(function(n){ window.dash.draw(n); });
   }
