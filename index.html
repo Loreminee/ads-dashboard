@@ -250,11 +250,11 @@ body{padding:12px}
     <h2 class="ads-sec">Soglie ACOS per libro (usate dal bot)</h2>
     <div class="ads-wrap">
       <table>
-        <thead><tr><th>Libro</th><th class="n">Pareggio</th><th class="n">+0,05 sotto</th><th class="n">+0,02 sotto</th><th class="n">−0,02 sopra</th><th class="n">Spegne sopra</th><th class="n">Offerta max KW</th><th class="n">Offerta max ASIN</th></tr></thead>
+        <thead><tr><th>Libro</th><th class="n">Pareggio</th><th class="n">+0,05 sotto</th><th class="n">+0,02 sotto</th><th class="n">−0,02 sopra</th><th class="n">Spegne sopra</th><th class="n">Offerta max KW</th><th class="n">Offerta max ASIN</th><th>Modalità del mese</th></tr></thead>
         <tbody data-draw="tabsoglie" data-source="regole"></tbody>
       </table>
     </div>
-    <p class="ads-note">Pareggio = royalty / prezzo. Con 1 sola vendita l'offerta scende già sopra il pareggio; con 2 o più vendite si alza sotto le prime due soglie.</p>
+    <p class="ads-note">Pareggio = royalty / prezzo. Con 1 sola vendita l'offerta scende già sopra il pareggio; con 2 o più vendite si alza sotto le prime due soglie. Modalità del mese: decisa ogni 30 giorni dalla regola mensile (severa = spegne a 1,2 volte il pareggio e niente rialzi); finché Publisher Champ non è collegato è sempre normale.</p>
   </div>
 
   <div class="ads-card">
@@ -628,6 +628,10 @@ window.dash={
       cella(tr, lib + (Object.keys(P).length > 1 ? ' (' + acc + ')' : ''));
       cella(tr, p.prezzo ? pct(S.fermo) : '— (prezzo non noto)', 'n'); cella(tr, pct(S.ottimo), 'n'); cella(tr, pct(S.buono), 'n'); cella(tr, pct(S.fermo), 'n'); cella(tr, pct(S.spegni), 'n');
       cella(tr, p.tetto_kw == null ? '—' : eur(p.tetto_kw), 'n'); cella(tr, p.tetto_asin == null ? '—' : eur(p.tetto_asin), 'n');
+      var mc = cella(tr, ''), mp = document.createElement('span'); mp.className = 'ads-pill';
+      mp.textContent = p.modalita === 'severa' ? 'severa' : p.modalita === 'spinta' ? 'spinta' : 'normale';
+      if (p.modalita === 'severa') mp.setAttribute('data-tone', 'bad'); else if (p.modalita === 'spinta') mp.setAttribute('data-tone', 'good');
+      mc.appendChild(mp);
       out.push(tr);
     }); });
     tb.replaceChildren.apply(tb, out);
@@ -1031,7 +1035,9 @@ window.dash={
     rows.forEach(function(r){
       if (r.spesa < 5) return;
       var d;
-      if (r.netto < 0){ d = el('div', 'ads-al'); d.appendChild(el('b', null, r.libro + ': in perdita di ' + eur(-r.netto)));
+      if (!r.royalty){ d = el('div', 'ads-al warn'); d.appendChild(el('b', null, r.libro + ': ' + eur(r.spesa) + ' di spesa Ads, nessuna royalty trovata'));
+        d.appendChild(el('small', null, 'Può essere che non abbia venduto, oppure che Publisher Champ chiami il libro con un titolo che il bot non riconosce: controlla prima di trarre conclusioni.')); }
+      else if (r.netto < 0){ d = el('div', 'ads-al'); d.appendChild(el('b', null, r.libro + ': in perdita di ' + eur(-r.netto)));
         d.appendChild(el('small', null, 'Spesa Ads ' + eur(r.spesa) + ' contro royalty totali ' + eur(r.royalty) + ' (vendite organiche comprese). Qui si spende troppo: guarda i target che spendono senza vendere.')); }
       else if (r.quota > 0.7){ d = el('div', 'ads-al warn'); d.appendChild(el('b', null, r.libro + ': le Ads si mangiano il ' + d3.format('.0%')(r.quota) + ' delle royalty'));
         d.appendChild(el('small', null, 'Resta un guadagno di ' + eur(r.netto) + ' su ' + eur(r.royalty) + ' di royalty.')); }
@@ -1045,6 +1051,21 @@ window.dash={
     [['Royalty totali', eur(t)], ['Spesa Ads', eur(sp)], ['Guadagno dopo le Ads', eur(t - sp)], ['Spesa su royalty', t ? pct(sp / t) : '—']].forEach(function(v){ var d = el('div'); d.appendChild(el('span', null, v[0])); d.appendChild(el('b', null, v[1])); k.appendChild(d); });
     out.push(k);
 
+    var Q = (window.__D.quote || {}).KDP;
+    if (Q && Q.libri){
+      var qc = el('div', 'ads-card'); qc.appendChild(el('h2', 'ads-sec', 'Regola mensile · calcolata il ' + fmtLong(parse(Q.calcolato)) + ' (dati dal ' + fmtLong(parse(Q.dal)) + ' al ' + fmtLong(parse(Q.al)) + ')'));
+      var qw = el('div', 'ads-wrap'), qt = el('table'), qh = el('tr'), qb = el('tbody');
+      ['Libro', 'Spesa Ads', 'Royalty totali', 'Spesa su royalty', 'Modalità'].forEach(function(h, i){ qh.appendChild(el('th', i && i < 4 ? 'n' : null, h)); });
+      var qth = el('thead'); qth.appendChild(qh); qt.appendChild(qth);
+      Object.keys(Q.libri).forEach(function(l){ var x = Q.libri[l], tr = el('tr');
+        tr.appendChild(el('td', null, l)); tr.appendChild(el('td', 'n', eur(x.spesa))); tr.appendChild(el('td', 'n', eur(x.royalty)));
+        tr.appendChild(el('td', 'n ' + (x.quota == null || x.quota > 0.15 ? 'bad' : x.quota < 0.10 ? 'good' : ''), x.quota == null ? 'nessuna royalty' : pct(x.quota)));
+        tr.appendChild(el('td', null, x.modalita === 'severa' ? 'Severa: spegne a 1,2× il pareggio, niente rialzi' : x.modalita === 'spinta' ? 'Spinta: c\'è spazio, valuta budget o tetto' : 'Normale'));
+        qb.appendChild(tr); });
+      qt.appendChild(qb); qw.appendChild(qt); qc.appendChild(qw);
+      qc.appendChild(el('p', 'ads-note', 'Obiettivo: spesa Ads tra il 10% e il 15% delle royalty totali del libro. La modalità vale 30 giorni, poi il bot la ricalcola.'));
+      out.push(qc);
+    }
     var card = el('div', 'ads-card'), w = el('div', 'ads-wrap'), tb = el('table'), th = el('thead'), trh = el('tr');
     card.appendChild(el('h2', 'ads-sec', 'Per libro (dal peggiore)'));
     ['Libro', 'Royalty totali', 'Copie vendute', 'Ordini da Ads', 'Copie organiche (stima)', 'Spesa Ads', 'Guadagno dopo Ads', 'Spesa su royalty'].forEach(function(h, i){ trh.appendChild(el('th', i ? 'n' : null, h)); });
@@ -1110,7 +1131,7 @@ window.dash={
   }
   function mostra(doc){
     ['righe','target','azioni','regole','eventi'].forEach(function(k){ window.__D[k]=doc[k]||[]; });
-    window.__D.profili=doc.profili||{}; window.__D.champ=doc.champ||{};
+    window.__D.profili=doc.profili||{}; window.__D.champ=doc.champ||{}; window.__D.quote=doc.quote||{};
     document.getElementById('agg').textContent='Dati veri di Amazon Ads · aggiornati il '+ora(doc.aggiornato)+' (ora italiana). Le vendite sono solo quelle attribuite alle pubblicità.';
     gate.hidden=true; app.hidden=false;
     Object.keys(window.__draws).forEach(function(n){ window.dash.draw(n); });
