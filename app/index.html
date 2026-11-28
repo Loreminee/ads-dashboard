@@ -153,7 +153,7 @@ function dataLunga(s){ return parse(s).toLocaleDateString('it-IT',{timeZone:'UTC
 function dataBreve(s){ return parse(s).toLocaleDateString('it-IT',{timeZone:'UTC',day:'numeric',month:'short'}); }
 function oraIt(iso){ if(!iso) return 'mai'; var d=new Date(iso); if(isNaN(d)) return String(iso); return d.toLocaleString('it-IT',{timeZone:'Europe/Rome',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}); }
 function base(libro){ return String(libro||'').replace(/ \((KDP|PublishDrive)\)$/,''); }
-var NOMI={FLORIDA:'Florida Road Atlas',ADAMS:'Adams Chart',AUTISM:'Autism Workbook',WALIPINI:'Walipini',LOST:'Lost Skills',LOSTSKILL:'Lost Skills','LOST SKILL':'Lost Skills','LOST SKILLS':'Lost Skills',RV:'RV Road','RV ROAD':'RV Road',RVROAD:'RV Road',FACT:'Fact or Flush?','FUN FACT':'Fact or Flush?',FUNFACT:'Fact or Flush?'};
+var NOMI={FLORIDA:'Florida Road Atlas',ADAMS:'Adams Chart',AUTISM:'Autism Workbook',WALIPINI:'Walipini',LOST:'Lost Skills',LOSTSKILL:'Lost Skills','LOST SKILL':'Lost Skills','LOST SKILLS':'Lost Skills',RV:'RV Road','RV ROAD':'RV Road',RVROAD:'RV Road',FACT:'Fact or Flush?',IPHONE:'iPhone Guide','FUN FACT':'Fact or Flush?',FUNFACT:'Fact or Flush?'};
 function nome(libro){ var b=base(libro), u=b.toUpperCase(); if(NOMI[u]) return NOMI[u]; return b.toLowerCase().replace(/(^|\s)\S/g,function(c){return c.toUpperCase();}); }
 function profilo(libro){ var P=(D&&D.profili)||{}, b=base(libro); if(P.KDP&&P.KDP[b]) return P.KDP[b]; for(var a in P){ if(P[a]&&P[a][b]) return P[a][b]; } return null; }
 function royalty(libro){ var p=profilo(libro); return p&&p.royalty!=null ? num(p.royalty) : null; }
@@ -293,8 +293,8 @@ function vOggi(m){
     var L2=el('div','list');
     az.slice(0,15).forEach(function(a){
       var r=el('div','row'), t=el('div','t',(a.azione||'')+' · '+nome(a.libro)+(a.tipo?' · '+a.tipo:''));
-      t.appendChild(el('small',null,dataBreve(a.data)+(a.motivo?' · '+a.motivo:''))); r.appendChild(t);
-      r.appendChild(el('div','r',(a.modifica||'')+(a.stato?' · '+String(a.stato).toLowerCase():''))); L2.appendChild(r);
+      var mo=(a.modifica||'')+(a.stato?' · '+String(a.stato).toLowerCase():''); if(mo){ var sm=el('small',null,mo); sm.style.color='var(--sub)'; t.appendChild(sm); }
+      t.appendChild(el('small',null,dataBreve(a.data)+(a.motivo?' · '+a.motivo:''))); r.appendChild(t); L2.appendChild(r);
     });
     sa.appendChild(L2);
     if(az.length>15) sa.appendChild(el('p','small','Mostro le ultime 15 di '+int(az.length)+'.'));
