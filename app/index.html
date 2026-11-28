@@ -101,6 +101,19 @@ nav button{background:none;border:0;display:flex;flex-direction:column;align-ite
 nav button[aria-selected="true"]{color:var(--ac);font-weight:600}
 .foot{font-size:11.5px;color:var(--mut);line-height:1.5;text-align:center;padding:4px 10px}
 .refresh{background:none;border:0;color:var(--ac);font-size:13px;font-weight:600;padding:8px}
+.sw{flex:none;width:52px;height:32px;border-radius:16px;border:0;padding:3px;display:flex;background:var(--ln2);justify-content:flex-start;transition:background .15s}
+.sw i{width:26px;height:26px;border-radius:13px;background:var(--mut);display:block;transition:background .15s}
+.sw[aria-checked="true"]{background:var(--ac);justify-content:flex-end}
+.sw[aria-checked="true"] i{background:#000}
+.sw:disabled{opacity:.45}
+.lock{flex:none;font-size:11px;color:var(--mut);border:1px solid var(--ln2);border-radius:8px;padding:3px 7px}
+.btn{height:46px;border-radius:14px;border:0;background:var(--ac);color:#000;font-weight:700;font-size:15px;padding:0 16px}
+.btn2{height:40px;border-radius:12px;border:1px solid var(--ln2);background:var(--s1);color:var(--sub);font-weight:600;font-size:13px;padding:0 14px}
+.inp{width:100%;height:44px;padding:0 12px;border-radius:12px;border:1px solid var(--ln2);background:var(--s2);font-size:15px}
+.msg{font-size:13px;line-height:1.4;padding:10px 12px;border-radius:12px}
+.msg.ok{background:var(--grbg);color:var(--grl);border:1px solid var(--grln)}
+.msg.ko{background:var(--rdbg);color:#FCA5A5;border:1px solid var(--rdln)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + var(--sab));z-index:9;background:#18181B;border:1px solid var(--ln2);color:var(--fg);font-size:13px;padding:10px 14px;border-radius:12px;max-width:90%;text-align:center}
 </style>
 </head>
 <body>
@@ -133,6 +146,10 @@ nav button[aria-selected="true"]{color:var(--ac);font-weight:600}
 (function(){
 'use strict';
 var KEY='adsapp_pw', DATA_URL='../data.enc.json', SOGLIA_SPESA=40, DAY=86400000;
+var REPO='Loreminee/ads-dashboard', IMP_FILE='impostazioni.enc.json', TOK='adsapp_tok';
+var VAPID='BIANQBveuHd9JuPFlsu52DV6xSYoU9br4WJk7NRgjghxHOCXB4cePdUx1NkznMqhrihcZ-p7Gq_CTGZ1Q3D3hWs';
+var IMP={regole_off:[],notifiche_off:[],push:[]}, IMP_SHA=null, IMP_OK=false, PW=null;
+var NOTIF=[['vendita','Nuove vendite'],['budget','Budget finiti e alzati'],['spesa','Spesa sopra $40'],['modifiche','Modifiche del bot'],['riepilogo','Riepiloghi 9:00 e 20:00'],['errori','Errori e ritardi'],['altro','Altri messaggi']];
 var D=null, ST={v:'oggi', q:'oggi', from:null, to:null, cats:{}};
 try{ var sv=localStorage.getItem('adsapp_v'); if(sv) ST.v=sv; }catch(_){}
 
@@ -357,15 +374,23 @@ function vCamp(m){
 // ---------- schermata REGOLE
 function vReg(m){
   var R=((D&&D.regole)||[]).slice().sort(function(a,b){ return (a.stato===b.stato?0:a.stato==='Attiva'?-1:1)||num(a.ordine)-num(b.ordine); });
-  var att=R.filter(function(r){ return r.stato==='Attiva'; }).length;
-  m.appendChild(el('p','plab',att+' attive · '+(R.length-att)+' non attive · valutate sugli ultimi 30 giorni'));
+  var spente=R.filter(function(r){ return r.spegnibile && IMP.regole_off.indexOf(Number(r.ordine))!==-1; }).length;
+  var att=R.filter(function(r){ return r.stato==='Attiva'; }).length-spente;
+  m.appendChild(el('p','plab',att+' attive · '+(R.length-att)+' spente o non attive · valutate sugli ultimi 30 giorni'));
+  if(!token()) m.appendChild(el('div','msg ko','Per accendere e spegnere le regole collega l\'app al bot nella scheda Avvisi.'));
+  else if(!IMP_OK) m.appendChild(el('div','msg ko','Non riesco a leggere le impostazioni del bot: controlla la connessione e tocca Aggiorna dati.'));
   if(!R.length){ m.appendChild(el('div','empty','Le regole non sono nei dati del bot.')); return; }
   var L=el('div','list');
   R.forEach(function(r){
-    var row=el('div','row'), t=el('div','t'); t.appendChild(el('b',null,(r.ambito||'Regola')));
+    var row=el('div','row'), t=el('div','t'); t.appendChild(el('b',null,(r.ordine!=null?r.ordine+' · ':'')+(r.ambito||'Regola')));
     if(r.quando) t.appendChild(el('small',null,'Quando: '+r.quando));
     if(r.allora) t.appendChild(el('small',null,'Allora: '+r.allora));
-    row.appendChild(t); var pr=el('div','r'); pr.appendChild(el('span','pill '+(r.stato==='Attiva'?'p-good':'p-warn'),r.stato||'—')); row.appendChild(pr);
+    row.appendChild(t);
+    if(r.spegnibile){
+      var on=IMP.regole_off.indexOf(Number(r.ordine))===-1;
+      row.appendChild(sw(on,'Regola '+r.ordine,function(v){ return salvaImp(function(d){ d.regole_off=d.regole_off.filter(function(x){ return x!==Number(r.ordine); }); if(!v) d.regole_off.push(Number(r.ordine)); }).then(function(ok){ if(ok) toast(v?'Regola accesa: il bot la usa dal prossimo giro.':'Regola spenta: il bot la salta dal prossimo giro.'); return ok; }); }, !IMP_OK));
+    } else if(r.stato==='Attiva'){ row.appendChild(el('span','lock','sempre attiva')); }
+    else { var pr=el('div','r'); pr.appendChild(el('span','pill p-warn',r.stato||'—')); row.appendChild(pr); }
     L.appendChild(row);
   });
   m.appendChild(L);
@@ -379,7 +404,7 @@ function vReg(m){
       row.appendChild(t); row.appendChild(el('div','r num',(p.tetto_kw!=null?money(num(p.tetto_kw)):'—')+' / '+(p.tetto_asin!=null?money(num(p.tetto_asin)):'—'))); L2.appendChild(row); });
     s.appendChild(L2); s.appendChild(el('p','small','A destra: tetto offerta keyword / ASIN.')); m.appendChild(s);
   }
-  m.appendChild(el('p','foot','Per cambiare una regola scrivilo nella chat del bot: questa schermata mostra quelle che il bot usa davvero.'));
+  m.appendChild(el('p','foot','Le regole "sempre attive" sono protezioni (limiti, tempi, tetti) e non si spengono. Il bot legge gli interruttori a ogni giro, entro mezz\'ora.'));
 }
 
 // ---------- schermata AVVISI
@@ -387,6 +412,40 @@ var CAT=[['rialzo','Rialzi','#34D399'],['ribasso','Ribassi','#FBBF24'],['spento'
 var CATC={}; CAT.forEach(function(c){ CATC[c[0]]=c; if(ST.cats[c[0]]==null) ST.cats[c[0]]=true; });
 function vAvv(m){
   var L=limiti();
+  var sn=el('div','sec'); sn.appendChild(el('h2',null,'Notifiche sull\'iPhone'));
+  var box=el('div','card'); box.style.cssText='display:flex;flex-direction:column;gap:10px';
+  if(!token()){
+    box.appendChild(el('p','small','Per le notifiche e gli interruttori l\'app deve poter salvare le impostazioni del bot. Incolla qui la chiave GitHub (permesso "Contents: Read and write" solo su ads-dashboard). Resta solo su questo telefono.'));
+    var lb=el('label','small','Chiave GitHub'); lb.setAttribute('for','tok'); box.appendChild(lb);
+    var inp=el('input','inp'); inp.id='tok'; inp.type='password'; inp.autocomplete='off'; inp.placeholder='github_pat_…'; box.appendChild(inp);
+    var bt=el('button','btn','Collega al bot'); bt.type='button';
+    bt.onclick=async function(){ var v=inp.value.trim(); if(!v){ toast('Incolla la chiave.'); return; } try{ localStorage.setItem(TOK,v); }catch(_){}
+      bt.textContent='Controllo…'; var r=await api('README.md'); if(!r.ok){ try{ localStorage.removeItem(TOK); }catch(_){} bt.textContent='Collega al bot'; toast(r.status===404?'La chiave non vede ads-dashboard.':'Chiave non valida (GitHub '+r.status+').'); return; }
+      await leggiImp(); toast(IMP_OK?'Collegata.':'Collegata, ma le impostazioni non si leggono: riprova.'); render(); };
+    box.appendChild(bt);
+  } else {
+    var stato=el('p','small','Controllo le notifiche…'); box.appendChild(stato);
+    var ba=el('button','btn','Attiva le notifiche'); ba.type='button'; ba.hidden=true;
+    ba.onclick=async function(){ ba.disabled=true; ba.textContent='Attivo…'; var ok=await attivaNotifiche(); ba.disabled=false; ba.textContent='Attiva le notifiche'; if(ok) render(); };
+    box.appendChild(ba);
+    statoNotifiche().then(function(x){
+      if(x==='on'){ stato.textContent='Notifiche attive su questo iPhone. Scegli qui sotto quali ricevere.'; }
+      else if(!installata()){ stato.textContent='Per ricevere le notifiche apri l\'app dall\'icona sulla schermata Home (Safari › Condividi › Aggiungi alla schermata Home).'; }
+      else { stato.textContent='Le notifiche non sono ancora attive su questo iPhone.'; ba.hidden=false; }
+    });
+    var esci=el('button','btn2','Scollega la chiave'); esci.type='button'; esci.style.alignSelf='flex-start';
+    esci.onclick=function(){ try{ localStorage.removeItem(TOK); }catch(_){} toast('Chiave tolta da questo telefono.'); render(); };
+    box.appendChild(esci);
+  }
+  sn.appendChild(box);
+  var Ln=el('div','list');
+  NOTIF.forEach(function(c){ var r=el('div','row'); r.style.alignItems='center'; r.appendChild(el('div','t',c[1]));
+    r.appendChild(sw(IMP.notifiche_off.indexOf(c[0])===-1,c[1],function(v){ return salvaImp(function(d){ d.notifiche_off=d.notifiche_off.filter(function(x){ return x!==c[0]; }); if(!v) d.notifiche_off.push(c[0]); }); }, !token()||!IMP_OK));
+    Ln.appendChild(r); });
+  sn.appendChild(Ln);
+  sn.appendChild(el('p','small','Le vendite arrivano con il ritardo dei report di Amazon (di solito 1–3 ore). Su Telegram continua ad arrivare tutto come prima.'));
+  m.appendChild(sn);
+
   var fin=righe().filter(function(x){ return x.ora_esaurimento && x.data>=addDays(L.max,-6); }).sort(function(a,b){ return a.data<b.data?1:a.data>b.data?-1:String(a.ora_esaurimento)<String(b.ora_esaurimento)?-1:1; });
   var s1=el('div','sec'); s1.appendChild(el('h2',null,'Budget finiti · ultimi 7 giorni'));
   if(!fin.length) s1.appendChild(el('div','empty','Nessuna campagna ha finito il budget negli ultimi 7 giorni.'));
@@ -414,7 +473,81 @@ function vAvv(m){
     });
   }
   m.appendChild(s2);
-  m.appendChild(el('p','foot','Le notifiche in tempo reale arrivano su Telegram dal bot.'));
+
+}
+
+
+// ---------- impostazioni condivise con il bot (cifrate con la stessa password, salvate su GitHub)
+function token(){ try{ return localStorage.getItem(TOK)||''; }catch(_){ return ''; } }
+function toast(t){ var e=el('div','toast',t); document.body.appendChild(e); setTimeout(function(){ e.remove(); },3200); }
+function u8b64(u){ var s=''; for(var i=0;i<u.length;i++) s+=String.fromCharCode(u[i]); return btoa(s); }
+async function cifra(doc,pw){
+  var salt=crypto.getRandomValues(new Uint8Array(16)), iv=crypto.getRandomValues(new Uint8Array(12)), iter=200000;
+  var km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+  var k=await crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:iter,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt']);
+  var ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(JSON.stringify(doc))));
+  return {v:1,iter:iter,salt:u8b64(salt),iv:u8b64(iv),ct:u8b64(ct)};
+}
+function normImp(d){ d=d&&typeof d==='object'?d:{}; return {regole_off:(d.regole_off||[]).map(Number), notifiche_off:d.notifiche_off||[], push:d.push||[], aggiornato:d.aggiornato||null}; }
+function api(path,opt){ opt=opt||{}; opt.headers=Object.assign({'Accept':'application/vnd.github+json','Authorization':'Bearer '+token(),'X-GitHub-Api-Version':'2022-11-28'},opt.headers||{}); return fetch('https://api.github.com/repos/'+REPO+'/contents/'+path,opt); }
+async function leggiImp(){
+  try{
+    var enc=null;
+    if(token()){
+      var r=await api(IMP_FILE+'?t='+Date.now(),{cache:'no-store'});
+      if(r.status===404){ IMP_SHA=null; IMP=normImp({}); IMP_OK=true; return true; }
+      if(!r.ok) throw new Error('GitHub '+r.status);
+      var j=await r.json(); IMP_SHA=j.sha; enc=JSON.parse(decodeURIComponent(escape(atob(j.content.replace(/\n/g,'')))));
+    } else {
+      var r2=await fetch('../'+IMP_FILE+'?t='+Date.now(),{cache:'no-store'});
+      if(r2.status===404){ IMP=normImp({}); IMP_OK=true; return true; }
+      if(!r2.ok) throw new Error('pagina '+r2.status);
+      enc=await r2.json();
+    }
+    IMP=normImp(await decifra(enc,PW)); IMP_OK=true; return true;
+  }catch(e){ console.log('impostazioni non lette',e); IMP_OK=false; return false; }
+}
+// cambia le impostazioni e le salva; in caso di conflitto rilegge e riapplica la modifica
+async function salvaImp(modifica){
+  if(!token()){ toast('Prima collega l\'app al bot (scheda Avvisi).'); return false; }
+  for(var tent=0;tent<3;tent++){
+    if(tent>0 || !IMP_OK){ if(!(await leggiImp())) break; }
+    var nuovo=normImp(JSON.parse(JSON.stringify(IMP))); modifica(nuovo); nuovo.aggiornato=new Date().toISOString();
+    var enc=await cifra(nuovo,PW);
+    var body={message:'impostazioni app',content:btoa(unescape(encodeURIComponent(JSON.stringify(enc))))};
+    if(IMP_SHA) body.sha=IMP_SHA;
+    var r=await api(IMP_FILE,{method:'PUT',body:JSON.stringify(body),headers:{'Content-Type':'application/json'}});
+    if(r.ok){ var j=await r.json(); IMP_SHA=j.content&&j.content.sha; IMP=nuovo; return true; }
+    if(r.status===401||r.status===403){ toast('Chiave GitHub non valida o senza permesso di scrittura.'); return false; }
+    if(r.status!==409&&r.status!==422){ toast('Salvataggio non riuscito (GitHub '+r.status+').'); return false; }
+  }
+  toast('Salvataggio non riuscito: riprova tra poco.'); return false;
+}
+function sw(on,label,onchange,disabled){
+  var b=el('button','sw'); b.type='button'; b.setAttribute('role','switch'); b.setAttribute('aria-checked',on?'true':'false'); b.setAttribute('aria-label',label);
+  if(disabled) b.disabled=true; b.appendChild(el('i'));
+  b.onclick=async function(){ if(b.disabled) return; var v=b.getAttribute('aria-checked')!=='true'; b.disabled=true; b.setAttribute('aria-checked',v?'true':'false');
+    var ok=await onchange(v); if(!ok) b.setAttribute('aria-checked',v?'false':'true'); b.disabled=false; if(ok){ ST._keep=true; render(); } };
+  return b;
+}
+function b64u(s){ var p='='.repeat((4-s.length%4)%4), b=atob((s+p).replace(/-/g,'+').replace(/_/g,'/')), u=new Uint8Array(b.length); for(var i=0;i<b.length;i++) u[i]=b.charCodeAt(i); return u; }
+function installata(){ return window.navigator.standalone===true || (window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches); }
+async function attivaNotifiche(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)||!('Notification' in window)){ toast(installata()?'Questo telefono non supporta le notifiche delle web app.':'Prima aggiungi l\'app alla schermata Home e aprila da lì.'); return false; }
+  var perm=await Notification.requestPermission();
+  if(perm!=='granted'){ toast('Notifiche non consentite. Puoi attivarle in Impostazioni › Notifiche › Ads KDP.'); return false; }
+  var reg=await navigator.serviceWorker.ready;
+  var sub=await reg.pushManager.getSubscription();
+  if(!sub) sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(VAPID)});
+  var j=sub.toJSON();
+  var ok=await salvaImp(function(d){ d.push=(d.push||[]).filter(function(x){ return x&&x.endpoint!==j.endpoint; }); d.push.push({endpoint:j.endpoint,keys:j.keys,telefono:'iPhone',dal:new Date().toISOString()}); });
+  if(ok){ try{ localStorage.setItem('adsapp_endpoint',j.endpoint); }catch(_){} toast('Notifiche attive: la prova arriva entro mezz\'ora.'); }
+  return ok;
+}
+async function statoNotifiche(){
+  try{ if(!('serviceWorker' in navigator)||!('PushManager' in window)) return 'no';
+    var reg=await navigator.serviceWorker.getRegistration(); var sub=reg&&await reg.pushManager.getSubscription();
+    if(!sub) return 'off'; return IMP.push.some(function(x){ return x.endpoint===sub.endpoint; })?'on':'off'; }catch(_){ return 'no'; }
 }
 
 // ---------- render
@@ -451,6 +584,7 @@ async function carica(pw,silenzioso){
   var enc=await r.json(), doc;
   try{ doc=await decifra(enc,pw); }catch(e){ if(!silenzioso) err.textContent='Password sbagliata.'; try{ localStorage.removeItem(KEY); }catch(_){} return false; }
   try{ localStorage.setItem(KEY,pw); }catch(_){}
+  PW=pw; await leggiImp();
   D=doc; $('gate').hidden=true; $('app').hidden=false; ST._keep=true; render(); return true;
 }
 $('f').addEventListener('submit',function(e){ e.preventDefault(); $('err').textContent=''; carica($('pw').value,false); });
@@ -458,7 +592,9 @@ var sp=pwSalvata();
 if(sp) carica(sp,true).then(function(ok){ if(!ok) $('gate').hidden=false; }); else $('gate').hidden=false;
 setInterval(function(){ var p=pwSalvata(); if(p&&!document.hidden) carica(p,true); },300000);
 document.addEventListener('visibilitychange',function(){ var p=pwSalvata(); if(!document.hidden&&p&&D) carica(p,true); });
-if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(function(){});
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(function(){});
+  navigator.serviceWorker.addEventListener('message',function(ev){ if(ev.data&&ev.data.vista&&VIEWS[ev.data.vista]){ ST.v=ev.data.vista; render(); } }); }
+try{ var qv=new URLSearchParams(location.search).get('v'); if(qv&&VIEWS[qv]) ST.v=qv; }catch(_){}
 })();
 </script>
 </body>
